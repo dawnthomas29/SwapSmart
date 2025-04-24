@@ -1,19 +1,26 @@
-// App.js
-
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CssBaseline, Container, Box } from '@mui/material';
 
+import './App.css';
 import NavBar from './components/NavBar';
 import Categories from './components/Categories';
 import FeedbackForm from './components/FeedbackForm';
-import FeedbackSection from './components/FeedbackSection'; // <- ADD THIS
+import FeedbackSection from './components/FeedbackSection';
 import Footer from './components/Footer';
 import Logos from './components/Logos';
 import Login from './components/Login';
 import Register from './components/Register';
 import ComplaintForm from './components/ComplaintForm';
 import Contact from './components/Contact';
+import AdminPage from './components/AdminPage'; // ✅ import admin page
+import useScrollRestoration from './components/useScrollRestoration'; // ✅ custom scroll hook
+
+// Wrap this in a component
+function ScrollManager() {
+  useScrollRestoration();
+  return null;
+}
 
 function HomeLayout({ feedbacks }) {
   return (
@@ -24,7 +31,7 @@ function HomeLayout({ feedbacks }) {
           <Logos />
         </Box>
       </Container>
-      <FeedbackSection feedbacks={feedbacks} /> {/* Show feedbacks here */}
+      <FeedbackSection feedbacks={feedbacks} />
       <Footer />
     </>
   );
@@ -40,6 +47,7 @@ function App() {
   return (
     <>
       <CssBaseline />
+      <ScrollManager /> {/* ✅ Scroll restoration handler */}
       <NavBar />
       <Routes>
         <Route path="/" element={<HomeLayout feedbacks={feedbacks} />} />
@@ -48,6 +56,7 @@ function App() {
         <Route path="/complaint" element={<ComplaintForm />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/feedback" element={<FeedbackForm onSubmitFeedback={handleAddFeedback} />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </>
   );

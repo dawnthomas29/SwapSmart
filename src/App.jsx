@@ -16,6 +16,7 @@ import Contact from './components/Contact';
 import AdminPage from './components/AdminPage'; // ✅ import admin page
 import useScrollRestoration from './components/useScrollRestoration'; // ✅ custom scroll hook
 import UserProfile from './components/UserProfile';
+import AddItem from './components/AddItem';
 
 // Wrap this in a component
 function ScrollManager() {
@@ -45,6 +46,12 @@ function App() {
     setFeedbacks((prev) => [newFeedback, ...prev]);
   };
 
+   const [items, setItems] = useState([]);
+
+  const handleAddItem = (newItem) => {
+    setItems([...items, newItem]);
+  };
+
   return (
     <>
       <CssBaseline />
@@ -59,6 +66,8 @@ function App() {
         <Route path="/feedback" element={<FeedbackForm onSubmitFeedback={handleAddFeedback} />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/userpage" element={<UserProfile />} />
+        <Route path="/add" element={<AddItem onAddItem={handleAddItem} />} />
+        <Route path="/" element={<Categories items={items} />} />
       </Routes>
     </>
   );

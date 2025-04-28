@@ -24,6 +24,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import MicIcon from '@mui/icons-material/Mic';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // ✅ New icon import
+import { AddBoxRounded } from '@mui/icons-material';
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -151,7 +152,6 @@ const NavBar = () => {
         sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}>
             You
           </Button>
-
           <Button
             color="inherit"
             component={Link}
@@ -161,6 +161,16 @@ const NavBar = () => {
           >
             Login
           </Button>
+          <Button 
+            color="inherit" 
+            component={Link} 
+            to="/add"
+            startIcon={<AddBoxRounded />}
+            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+          >
+            Add Item
+          </Button>
+          
         </Box>
       </Toolbar>
 
@@ -192,6 +202,19 @@ const NavBar = () => {
               <LoginIcon sx={{ color: selectedMenuItem === 'login' ? 'white' : 'black' }} />
             </ListItemIcon>
             <ListItemText primary="Login" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => handleMenuItemClick('add', '/add')}
+            sx={{
+              backgroundColor: selectedMenuItem === 'add' ? 'coral' : 'transparent',
+              '&:hover': { backgroundColor: 'coral' },
+            }}
+          >
+            <ListItemIcon>
+              <AddBoxRounded sx={{ color: selectedMenuItem === 'add' ? 'white' : 'black' }} />
+            </ListItemIcon>
+            <ListItemText primary="Add Item" />
           </ListItem>
           <ListItem
             button

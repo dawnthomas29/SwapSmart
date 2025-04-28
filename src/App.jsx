@@ -15,6 +15,7 @@ import ComplaintForm from './components/ComplaintForm';
 import Contact from './components/Contact';
 import AdminPage from './components/AdminPage'; // ✅ import admin page
 import useScrollRestoration from './components/useScrollRestoration'; // ✅ custom scroll hook
+import UserProfile from './components/UserProfile';
 
 // Wrap this in a component
 function ScrollManager() {
@@ -47,16 +48,17 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <ScrollManager /> {/* ✅ Scroll restoration handler */}
+      <ScrollManager />
       <NavBar />
       <Routes>
         <Route path="/" element={<HomeLayout feedbacks={feedbacks} />} />
         <Route path="/log" element={<Login />} />
-        <Route path="/reg" element={<Register />} />
+        <Route path="/reg" element={<Login />} />
         <Route path="/complaint" element={<ComplaintForm />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/feedback" element={<FeedbackForm onSubmitFeedback={handleAddFeedback} />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/userpage" element={<UserProfile />} />
       </Routes>
     </>
   );

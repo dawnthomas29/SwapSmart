@@ -23,6 +23,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import MicIcon from '@mui/icons-material/Mic';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // ✅ New icon import
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -64,11 +65,11 @@ const NavBar = () => {
   const handleMenuItemClick = (item, route) => {
     setSelectedMenuItem(item);
     toggleDrawer(false);
-    navigate(route); // Navigates to the selected route
+    navigate(route);
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: 'coral', px: 2 }}>
+    <AppBar position="fixed" sx={{ backgroundColor: 'coral', px: 2, zIndex: 1201 }}>
       <Toolbar sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
         <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => toggleDrawer(true)} sx={{ mr: 2 }}>
           <MenuIcon />
@@ -131,7 +132,8 @@ const NavBar = () => {
           />
         </Box>
         <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 2 }}>
-          &nbsp;
+        &nbsp;
+
           <Button
             color="inherit"
             component={Link}
@@ -141,6 +143,15 @@ const NavBar = () => {
           >
             Home
           </Button>
+          <Button
+        color="inherit"
+        component={Link}
+        to="/userpage"
+         startIcon={<AccountCircleIcon />}
+        sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}>
+            You
+          </Button>
+
           <Button
             color="inherit"
             component={Link}
@@ -154,6 +165,7 @@ const NavBar = () => {
       </Toolbar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
+        <br /><br /><br />
         <List sx={{ width: 250 }}>
           <ListItem
             button
@@ -183,7 +195,20 @@ const NavBar = () => {
           </ListItem>
           <ListItem
             button
-            onClick={() => handleMenuItemClick('contact', '/contact')}
+            onClick={() => handleMenuItemClick('userpage', '/userpage')}
+            sx={{
+              backgroundColor: selectedMenuItem === 'userpage' ? 'coral' : 'transparent',
+              '&:hover': { backgroundColor: 'coral' },
+            }}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon sx={{ color: selectedMenuItem === 'userpage' ? 'white' : 'black' }} />
+            </ListItemIcon>
+            <ListItemText primary="You" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => handleMenuItemClick('userpage', '/userpage')}
             sx={{
               backgroundColor: selectedMenuItem === 'contact' ? 'coral' : 'transparent',
               '&:hover': { backgroundColor: 'coral' },
@@ -207,6 +232,7 @@ const NavBar = () => {
             </ListItemIcon>
             <ListItemText primary="Feedback" />
           </ListItem>
+      
         </List>
       </Drawer>
     </AppBar>

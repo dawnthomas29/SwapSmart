@@ -10,13 +10,14 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import LoginIcon from '@mui/icons-material/Login';
+import axios from 'axios';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     phone: '',
-    username: '',
+    email: '',
     password: '',
     confirmPassword: ''
   });
@@ -30,28 +31,27 @@ const Login = () => {
   };
 
   const validate = () => {
-    // Regex: name.2digits3letters3digits@mariancollege.org
     const emailPattern = /^[a-z]+\.\d{2}[a-z]{3}\d{3}@mariancollege\.org$/i;
-    const isAdmin = formData.username.toLowerCase() === 'admin@mariancollege.org';
+    const isAdmin = formData.email.toLowerCase() === 'admin@mariancollege.org';
 
-    const isEmailValid = isAdmin || emailPattern.test(formData.username);
+    const isEmailValid = isAdmin || emailPattern.test(formData.email);
     const isPasswordValid = formData.password.length >= 7;
     const isConfirmValid = isLogin || formData.password === formData.confirmPassword;
     const isPhoneValid = isLogin || /^\d{10}$/.test(formData.phone);
-    const isNameValid = isLogin || formData.fullName.trim().length > 0;
+    const isNameValid = isLogin || formData.name.trim().length > 0;
 
     setErrors({
-      username: !isEmailValid,
+      email: !isEmailValid,
       password: !isPasswordValid,
       confirmPassword: !isConfirmValid,
       phone: !isPhoneValid,
-      fullName: !isNameValid
+      name: !isNameValid
     });
 
     return isEmailValid && isPasswordValid && isConfirmValid && isPhoneValid && isNameValid;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) {
       setSnackbar({
         open: true,
@@ -61,31 +61,76 @@ const Login = () => {
       return;
     }
 
-    if (isLogin) {
-      const isAdmin =
-        formData.username === 'admin@mariancollege.org' &&
-        formData.password === '1234567';
+    try {
+      if (isLogin) {
+        // Admin shortcut login (no backend check)
+        if (
+          formData.email.toLowerCase() === 'admin@mariancollege.org' &&
+          formData.password === '1234567'
+        ) {
+          localStorage.setItem('token', 'admin-token'); // optional
+          localStorage.setItem('user', JSON.stringify({
+            name: 'Admin',
+            email: 'admin@mariancollege.org',
+            phone: '8848250575',
+            role: 'admin'
+          }));
+          setSnackbar({
+            open: true,
+            message: 'Admin Login Successful!',
+            severity: 'success'
+          });
+          setTimeout(() => {
+            navigate('/admin');
+          }, 1500);
+          return;
+        }
 
+        // Regular user login
+        const response = await axios.post('http://localhost:5000/api/users/log', {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+
+        setSnackbar({
+          open: true,
+          message: 'Login Successful!',
+          severity: 'success'
+        });
+
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
+      } else {
+        // Registration
+        await axios.post('http://localhost:5000/api/users/reg', {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          password: formData.password
+        });
+
+        setSnackbar({
+          open: true,
+          message: 'Registration Successful! Please log in.',
+          severity: 'success'
+        });
+
+        setTimeout(() => {
+          setIsLogin(true);
+          navigate('/log');
+        }, 1500);
+      }
+    } catch (error) {
+      console.error(error);
       setSnackbar({
         open: true,
-        message: isAdmin ? 'Admin Login Successful!' : 'Login Successful!',
-        severity: 'success'
+        message: error.response?.data?.message || 'Something went wrong!',
+        severity: 'error'
       });
-
-      setTimeout(() => {
-        navigate(isAdmin ? '/admin' : '/');
-      }, 1500);
-    } else {
-      setSnackbar({
-        open: true,
-        message: 'Registration Successful!',
-        severity: 'success'
-      });
-
-      setTimeout(() => {
-        setIsLogin(true);
-        navigate('/login'); // redirect to login after registration
-      }, 1500);
     }
   };
 
@@ -102,15 +147,15 @@ const Login = () => {
         {!isLogin && (
           <>
             <TextField
-              name="fullName"
+              name="name"
               label="Full Name"
-              value={formData.fullName}
+              value={formData.name}
               onChange={handleChange}
               fullWidth
               margin="normal"
               variant="outlined"
-              error={errors.fullName}
-              helperText={errors.fullName && 'Full name is required'}
+              error={errors.name}
+              helperText={errors.name && 'Full name is required'}
             />
             <TextField
               name="phone"
@@ -127,15 +172,15 @@ const Login = () => {
         )}
 
         <TextField
-          name="username"
+          name="email"
           label="College Email ID"
-          value={formData.username}
+          value={formData.email}
           onChange={handleChange}
           fullWidth
           margin="normal"
           variant="outlined"
-          error={errors.username}
-          helperText={errors.username && 'Use your college email ID'}
+          error={errors.email}
+          helperText={errors.email && 'Use your college email ID'}
         />
 
         <TextField

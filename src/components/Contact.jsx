@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Box,
@@ -6,20 +6,81 @@ import {
   Typography,
   TextField,
   Link,
+  Snackbar,
+  Alert,
 } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Contact() {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check if redirected from success
+    if (location.state?.fromSuccess) {
+      setSnackbar({
+        open: true,
+        message: "Your message has been sent successfully! We'll get back to you soon.",
+        severity: 'success',
+      });
+    }
+  }, [location.state]);
 
   const handleCallAdminClick = () => {
     setShowPhoneNumber(!showPhoneNumber);
-    setShowEmailForm(false); // Hide email form when phone number is toggled
+    setShowEmailForm(false);
   };
 
   const handleSendEmailClick = () => {
     setShowEmailForm(true);
-    setShowPhoneNumber(false); // Hide phone number when email form is shown
+    setShowPhoneNumber(false);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const complaint = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message'),
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/complaints', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(complaint),
+      });
+
+      if (response.ok) {
+        // Redirect to /contact and show success via state
+        navigate('/contact', { state: { fromSuccess: true } });
+      } else {
+        setSnackbar({
+          open: true,
+          message: 'Failed to submit complaint.',
+          severity: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSnackbar({
+        open: true,
+        message: 'An error occurred. Please try again later.',
+        severity: 'error',
+      });
+    }
   };
 
   return (
@@ -41,7 +102,6 @@ export default function Contact() {
         Contact Admin
       </Typography>
 
-      {/* Link to show phone number */}
       <Link
         component="button"
         underline="hover"
@@ -56,7 +116,6 @@ export default function Contact() {
         </Typography>
       )}
 
-      {/* Link to show email form */}
       <Link
         component="button"
         underline="hover"
@@ -66,22 +125,21 @@ export default function Contact() {
         📧 Send an Email
       </Link>
 
-      {/* Display email form when 'Send an Email' is clicked */}
       {showEmailForm && (
         <Box
           mt={3}
           component="form"
-          action="mailto:admin@example.com"
-          method="post"
-          encType="text/plain"
+          onSubmit={handleSubmit}
         >
           <TextField
+            name="name"
             fullWidth
             label="Your Name"
             margin="normal"
             required
           />
           <TextField
+            name="email"
             fullWidth
             label="Your Email"
             margin="normal"
@@ -89,6 +147,7 @@ export default function Contact() {
             type="email"
           />
           <TextField
+            name="message"
             fullWidth
             label="Message"
             multiline
@@ -105,10 +164,22 @@ export default function Contact() {
               '&:hover': { backgroundColor: '#e6735b' },
             }}
           >
-            Send Email
+            Send Message
           </Button>
         </Box>
       )}
+
+      {/* Snackbar for feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

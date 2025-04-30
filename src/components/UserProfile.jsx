@@ -98,7 +98,7 @@ const UserProfile = () => {
   if (!profile) return <Typography>Loading...</Typography>;
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 6, pt: 10 }}> {/* Increased mt and pt */}
       {/* Profile Header */}
       <Box display="flex" alignItems="center" mb={4}>
         <Avatar src={profile.avatar} sx={{ width: 100, height: 100, mr: 2 }} />

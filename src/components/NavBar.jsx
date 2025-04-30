@@ -23,15 +23,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import MicIcon from '@mui/icons-material/Mic';
 import FeedbackIcon from '@mui/icons-material/Feedback';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'; // ✅ New icon import
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { AddBoxRounded } from '@mui/icons-material';
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState('');
   const navigate = useNavigate();
+
+  const isLoggedIn = Boolean(localStorage.getItem('token'));
 
   const toggleDrawer = (open) => {
     setDrawerOpen(open);
@@ -63,15 +64,27 @@ const NavBar = () => {
     recognition.start();
   };
 
-  const handleMenuItemClick = (item, route) => {
-    setSelectedMenuItem(item);
+  const handleMenuItemClick = (route) => {
     toggleDrawer(false);
     navigate(route);
   };
 
+  const handleAddItemClick = () => {
+    if (!isLoggedIn) {
+      navigate('/log');
+    } else {
+      navigate('/add');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: 'coral', px: 2, zIndex: 1201 }}>
-      <Toolbar sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+    <AppBar position="fixed" sx={{ backgroundColor: 'coral', px: 2, zIndex: 1201, height: '70px' }}>
+      <Toolbar sx={{ width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
         <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => toggleDrawer(true)} sx={{ mr: 2 }}>
           <MenuIcon />
         </IconButton>
@@ -120,10 +133,7 @@ const NavBar = () => {
                     </InputAdornment>
                   )}
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleVoiceSearch}
-                      sx={{ color: isListening ? 'green' : 'inherit' }}
-                    >
+                    <IconButton onClick={handleVoiceSearch} sx={{ color: isListening ? 'green' : 'inherit' }}>
                       <MicIcon />
                     </IconButton>
                   </InputAdornment>
@@ -133,8 +143,7 @@ const NavBar = () => {
           />
         </Box>
         <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 2 }}>
-        &nbsp;
-
+          &nbsp;  &nbsp;  &nbsp;
           <Button
             color="inherit"
             component={Link}
@@ -144,119 +153,101 @@ const NavBar = () => {
           >
             Home
           </Button>
-          <Button
-        color="inherit"
-        component={Link}
-        to="/userpage"
-         startIcon={<AccountCircleIcon />}
-        sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}>
-            You
-          </Button>
+          {isLoggedIn ? (
+            <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/userpage"
+                startIcon={<AccountCircleIcon />}
+                sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+              >
+                Profile
+              </Button>
+              <Button
+                color="inherit"
+                onClick={handleLogout}
+                startIcon={<LoginIcon />}
+                sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/log"
+              startIcon={<LoginIcon />}
+              sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+            >
+              Login
+            </Button>
+          )}
           <Button
             color="inherit"
-            component={Link}
-            to="/log"
-            startIcon={<LoginIcon />}
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-          >
-            Login
-          </Button>
-          <Button 
-            color="inherit" 
-            component={Link} 
-            to="/add"
+            onClick={handleAddItemClick}
             startIcon={<AddBoxRounded />}
             sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
           >
             Add Item
           </Button>
-          
         </Box>
       </Toolbar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
         <br /><br /><br />
-        <List sx={{ width: 250 }}>
-          <ListItem
-            button
-            onClick={() => handleMenuItemClick('home', '/')}
-            sx={{
-              backgroundColor: selectedMenuItem === 'home' ? 'coral' : 'transparent',
-              '&:hover': { backgroundColor: 'coral' },
-            }}
-          >
-            <ListItemIcon>
-              <HomeIcon sx={{ color: selectedMenuItem === 'home' ? 'white' : 'black' }} />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleMenuItemClick('login', '/log')}
-            sx={{
-              backgroundColor: selectedMenuItem === 'login' ? 'coral' : 'transparent',
-              '&:hover': { backgroundColor: 'coral' },
-            }}
-          >
-            <ListItemIcon>
-              <LoginIcon sx={{ color: selectedMenuItem === 'login' ? 'white' : 'black' }} />
-            </ListItemIcon>
-            <ListItemText primary="Login" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleMenuItemClick('add', '/add')}
-            sx={{
-              backgroundColor: selectedMenuItem === 'add' ? 'coral' : 'transparent',
-              '&:hover': { backgroundColor: 'coral' },
-            }}
-          >
-            <ListItemIcon>
-              <AddBoxRounded sx={{ color: selectedMenuItem === 'add' ? 'white' : 'black' }} />
-            </ListItemIcon>
-            <ListItemText primary="Add Item" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleMenuItemClick('userpage', '/userpage')}
-            sx={{
-              backgroundColor: selectedMenuItem === 'userpage' ? 'coral' : 'transparent',
-              '&:hover': { backgroundColor: 'coral' },
-            }}
-          >
-            <ListItemIcon>
-              <AccountCircleIcon sx={{ color: selectedMenuItem === 'userpage' ? 'white' : 'black' }} />
-            </ListItemIcon>
-            <ListItemText primary="You" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleMenuItemClick('userpage', '/userpage')}
-            sx={{
-              backgroundColor: selectedMenuItem === 'contact' ? 'coral' : 'transparent',
-              '&:hover': { backgroundColor: 'coral' },
-            }}
-          >
-            <ListItemIcon>
-              <SupportAgentIcon sx={{ color: selectedMenuItem === 'contact' ? 'white' : 'black' }} />
-            </ListItemIcon>
-            <ListItemText primary="Help & Support" />
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleMenuItemClick('feedback', '/feedback')}
-            sx={{
-              backgroundColor: selectedMenuItem === 'feedback' ? 'coral' : 'transparent',
-              '&:hover': { backgroundColor: 'coral' },
-            }}
-          >
-            <ListItemIcon>
-              <FeedbackIcon sx={{ color: selectedMenuItem === 'feedback' ? 'white' : 'black' }} />
-            </ListItemIcon>
-            <ListItemText primary="Feedback" />
-          </ListItem>
-      
-        </List>
+        <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
+          <List>
+            <ListItem button component={Link} to="/" onClick={() => handleMenuItemClick('/')}>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItem>
+            {isLoggedIn ? (
+              <>
+                <ListItem button component={Link} to="/userpage" onClick={() => handleMenuItemClick('/userpage')}>
+                  <ListItemIcon>
+                    <AccountCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Profile" />
+                </ListItem>
+                <ListItem button onClick={handleLogout}>
+                  <ListItemIcon>
+                    <LoginIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </>
+            ) : (
+              <ListItem button component={Link} to="/log" onClick={() => handleMenuItemClick('/log')}>
+                <ListItemIcon>
+                  <LoginIcon />
+                </ListItemIcon>
+                <ListItemText primary="Login" />
+              </ListItem>
+            )}
+            <ListItem button onClick={handleAddItemClick}>
+              <ListItemIcon>
+                <AddBoxRounded />
+              </ListItemIcon>
+              <ListItemText primary="Add Item" />
+            </ListItem>
+            <ListItem button component={Link} to="/feedback" onClick={() => handleMenuItemClick('/feedback')}>
+              <ListItemIcon>
+                <FeedbackIcon />
+              </ListItemIcon>
+              <ListItemText primary="Feedback" />
+            </ListItem>
+            <ListItem button component={Link} to="/contact" onClick={() => handleMenuItemClick('/support')}>
+              <ListItemIcon>
+                <SupportAgentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Help & Support" />
+            </ListItem>
+          </List>
+        </Box>
       </Drawer>
     </AppBar>
   );

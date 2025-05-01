@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useNavigate } from 'react-router-dom';
-
 const categories = ['Electronics', 'Books', 'Clothing', 'Home', 'Sports', 'Stationary'];
 
 const AddItem = ({ onAddItem }) => {
@@ -21,7 +20,9 @@ const AddItem = ({ onAddItem }) => {
     description: '',
     contact: '',
     category: '',
-    image: ''
+    image: '',
+    duration: '',  // New field for duration
+    price: ''      // New field for price
   });
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -50,6 +51,8 @@ const AddItem = ({ onAddItem }) => {
     if (!form.description) newErrors.description = 'Description is required';
     if (!form.contact) newErrors.contact = 'Contact is required';
     if (!form.category) newErrors.category = 'Category is required';
+    if (!form.duration) newErrors.duration = 'Duration is required'; // Validation for duration
+    if (!form.price) newErrors.price = 'Price is required';         // Validation for price
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -183,6 +186,34 @@ const AddItem = ({ onAddItem }) => {
             </MenuItem>
           ))}
         </TextField>
+
+        {/* New Duration Field */}
+        <TextField
+          name="duration"
+          label="Duration (in weeks)"
+          value={form.duration}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          type="number"
+          error={!!errors.duration}
+          helperText={errors.duration}
+        />
+
+        {/* New Price Field */}
+        <TextField
+          name="price"
+          label="Price per Week"
+          value={form.price}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          type="text"
+          error={!!errors.price}
+          helperText={errors.price}
+        />
 
         <Button
           variant="contained"

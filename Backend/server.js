@@ -1,11 +1,12 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import { connectDBs } from './config/db.js';
 
-// Import custom DB connection setup
-const { connectDBs } = require('./config/db');
-const complaintRoutes = require('./routes/complaintRoutes');
-const userRoutes = require('./routes/userRoutes');
+import complaintRoutes from './routes/complaintRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js'; 
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
 
@@ -13,22 +14,26 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware setup
-app.use(express.json()); // Parse JSON request bodies
-app.use(cors()); // Enable CORS for all origins
+app.use(express.json());
+app.use(cors());
 
-// Connect to MongoDB databases
 connectDBs()
   .then(() => {
     // Routes
-    app.use('/api/complaints', complaintRoutes); // Routes for complaint handling
-    app.use('/api/users', userRoutes); // Routes for user management
+    app.use('/api/complaints', complaintRoutes);
+    app.use('/api/users', userRoutes);
+    app.use('/api/product', productRoutes);
+    app.use('/api/feedback', feedbackRoutes); // Feedback route
 
-    // Start the server
+    app.get('/', (req, res) => {
+      res.send('API is running...');
+    });
+
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    console.error('Error connecting to databases:', error);
-    process.exit(1); // Exit the process if DB connection fails
+    console.error('Error starting the server:', error);
+    process.exit(1);
   });

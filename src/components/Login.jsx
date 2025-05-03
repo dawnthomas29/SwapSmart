@@ -63,37 +63,40 @@ const Login = () => {
 
     try {
       if (isLogin) {
-        // Admin shortcut login (no backend check)
         if (
           formData.email.toLowerCase() === 'admin@mariancollege.org' &&
           formData.password === '1234567'
         ) {
-          localStorage.setItem('token', 'admin-token'); // optional
-          localStorage.setItem('user', JSON.stringify({
+          localStorage.setItem('token', 'admin-token');
+          const adminUser = {
             name: 'Admin',
             email: 'admin@mariancollege.org',
             phone: '8848250575',
             role: 'admin'
-          }));
+          };
+          localStorage.setItem('user', JSON.stringify(adminUser));
+          localStorage.setItem('userEmail', adminUser.email); // Store email in localStorage
+
           setSnackbar({
             open: true,
             message: 'Admin Login Successful!',
             severity: 'success'
           });
           setTimeout(() => {
-            navigate('/admin');
+            navigate('/admin'); // Redirect to admin page
           }, 1500);
           return;
         }
 
-        // Regular user login
         const response = await axios.post('http://localhost:5000/api/users/log', {
           email: formData.email,
           password: formData.password,
         });
 
+        // Store user info and email in localStorage
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('userEmail', response.data.user.email); // Store email in localStorage
 
         setSnackbar({
           open: true,
@@ -102,10 +105,13 @@ const Login = () => {
         });
 
         setTimeout(() => {
-          navigate('/');
+          if (response.data.user.email.toLowerCase() === 'admin@mariancollege.org') {
+            navigate('/admin'); // Redirect to admin page
+          } else {
+            navigate('/'); // Redirect to homepage for regular users
+          }
         }, 1500);
       } else {
-        // Registration
         await axios.post('http://localhost:5000/api/users/reg', {
           name: formData.name,
           phone: formData.phone,
@@ -135,8 +141,28 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Box sx={{ width: '100%', maxWidth: '400px', padding: '40px', boxShadow: '0px 4px 20px rgba(0,0,0,0.1)', borderRadius: '12px', backgroundColor: '#ffffff' }}>
+    <Container
+      maxWidth="xs"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        height: '100vh',
+        overflowY: 'auto',
+        pt: 6,
+        pb: 4
+      }}
+    >
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '400px',
+          padding: '40px',
+          boxShadow: '0px 4px 20px rgba(0,0,0,0.1)',
+          borderRadius: '12px',
+          backgroundColor: '#ffffff',
+        }}
+      >
         <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
           <LoginIcon sx={{ fontSize: 30, color: '#FF7F50', marginRight: 1 }} />
           <Typography variant="h4" sx={{ color: '#FF7F50' }}>
@@ -247,11 +273,17 @@ const Login = () => {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} variant="filled" sx={{ width: '100%' }}>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
     </Container>
   );
 };
+
 export default Login;

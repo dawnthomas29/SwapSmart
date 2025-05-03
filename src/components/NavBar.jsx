@@ -33,6 +33,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const isLoggedIn = Boolean(localStorage.getItem('token'));
+  const userEmail = localStorage.getItem('userEmail'); // Get the user's email from localStorage
 
   const toggleDrawer = (open) => {
     setDrawerOpen(open);
@@ -79,7 +80,20 @@ const NavBar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
     navigate('/');
+  };
+
+  const handleProfileClick = () => {
+    // Debugging step: Log the email to check its value
+    console.log("User Email:", userEmail);
+
+    // Check if the user is an admin by their email
+    if (userEmail === 'admin@mariancollege.org') {
+      navigate('/admin');  // Redirect to admin page if it's the admin email
+    } else {
+      navigate('/userpage');  // Redirect to user profile page for regular users
+    }
   };
 
   return (
@@ -143,7 +157,6 @@ const NavBar = () => {
           />
         </Box>
         <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 2 }}>
-          &nbsp;  &nbsp;  &nbsp;
           <Button
             color="inherit"
             component={Link}
@@ -157,8 +170,7 @@ const NavBar = () => {
             <>
               <Button
                 color="inherit"
-                component={Link}
-                to="/userpage"
+                onClick={handleProfileClick}  // Handle profile click based on user email
                 startIcon={<AccountCircleIcon />}
                 sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
               >
@@ -199,7 +211,7 @@ const NavBar = () => {
         <br /><br /><br />
         <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
           <List>
-            <ListItem button component={Link} to="/" onClick={() => handleMenuItemClick('/')}>
+            <ListItem button component={Link} to="/" onClick={() => handleMenuItemClick('/')} >
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -207,7 +219,7 @@ const NavBar = () => {
             </ListItem>
             {isLoggedIn ? (
               <>
-                <ListItem button component={Link} to="/userpage" onClick={() => handleMenuItemClick('/userpage')}>
+                <ListItem button onClick={handleProfileClick}> {/* Handle Profile click */}
                   <ListItemIcon>
                     <AccountCircleIcon />
                   </ListItemIcon>
@@ -221,7 +233,7 @@ const NavBar = () => {
                 </ListItem>
               </>
             ) : (
-              <ListItem button component={Link} to="/log" onClick={() => handleMenuItemClick('/log')}>
+              <ListItem button component={Link} to="/log" onClick={() => handleMenuItemClick('/log')} >
                 <ListItemIcon>
                   <LoginIcon />
                 </ListItemIcon>

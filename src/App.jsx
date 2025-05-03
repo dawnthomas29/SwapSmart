@@ -17,21 +17,22 @@ import AdminPage from './components/AdminPage';
 import useScrollRestoration from './components/useScrollRestoration';
 import UserProfile from './components/UserProfile';
 import AddItem from './components/AddItem';
+import Home from './components/Home';
 
-// Wrap this in a component
 function ScrollManager() {
   useScrollRestoration();
   return null;
 }
 
 // Home page layout
-function HomeLayout({ feedbacks }) {
+function HomeLayout({ feedbacks, items }) {
   return (
     <>
       <Container maxWidth="lg" sx={{ padding: '20px 0' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Categories />
+          <Categories items={items} />
           <Logos />
+          <Home items={items} /> {/* ✅ Ensures Home component renders */}
         </Box>
       </Container>
       <FeedbackSection feedbacks={feedbacks} />
@@ -44,7 +45,7 @@ function App() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [items, setItems] = useState([]);
 
-  // 🔄 Fetch feedbacks on app load
+  // 🔄 Fetch feedbacks and products
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
@@ -60,16 +61,31 @@ function App() {
       }
     };
 
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/products');
+        if (res.ok) {
+          const data = await res.json();
+          setItems(data);
+        } else {
+          console.error('Failed to fetch products');
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      }
+    };
+
     fetchFeedbacks();
+    fetchProducts();
   }, []);
 
-  // Add new feedback to state
+  // Handlers for form submissions
   const handleAddFeedback = (newFeedback) => {
     setFeedbacks((prev) => [newFeedback, ...prev]);
   };
 
   const handleAddItem = (newItem) => {
-    setItems([...items, newItem]);
+    setItems((prev) => [...prev, newItem]);
   };
 
   return (
@@ -78,7 +94,7 @@ function App() {
       <ScrollManager />
       <NavBar />
       <Routes>
-        <Route path="/" element={<HomeLayout feedbacks={feedbacks} />} />
+        <Route path="/" element={<HomeLayout feedbacks={feedbacks} items={items} />} />
         <Route path="/log" element={<Login />} />
         <Route path="/reg" element={<Register />} />
         <Route path="/complaint" element={<ComplaintForm />} />
@@ -87,7 +103,6 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/userpage" element={<UserProfile />} />
         <Route path="/add" element={<AddItem onAddItem={handleAddItem} />} />
-        {/* No need to repeat "/" route again */}
       </Routes>
     </>
   );

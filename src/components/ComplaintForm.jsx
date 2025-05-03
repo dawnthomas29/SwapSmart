@@ -1,103 +1,84 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  TextField,
-  Box,
-  Typography,
-  Container,
-  AppBar,
-  Toolbar,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
 
-export default function ComplaintForm() {
-  const navigate = useNavigate();
+const Categories = () => {
+  const categories = [
+    { name: 'Electronics', image: '/electronics.jpg' },
+    { name: 'Books', image: '/books.jpg' },
+    { name: 'Clothing', image: '/clothing.jpg' },
+    { name: 'Home', image: '/home.jpg' },
+    { name: 'Sports', image: '/sports.jpg' },
+    { name: 'Stationery', image: '/stationary.jpg' },
+  ];
 
   return (
-    <>
-      <AppBar position="static" sx={{ backgroundColor: 'coral' }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            SwapSmart
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      <Container
-        maxWidth="sm"
-        sx={{
-          backgroundColor: '#ffffff',
-          mt: 5,
-          p: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-        }}
-      >
-        <Typography
-          variant="subtitle1"
-          gutterBottom
-          sx={{ color: 'coral', fontWeight: 'bold', mb: 2 }}
+    <Box
+      sx={{
+        backgroundColor: 'white',
+        px: 2,
+        py: 1,
+        margin: { xs: 1, sm: 4, md: 8 },
+        boxShadow: 0,
+        display: 'flex',
+        justifyContent: { xs: 'center', sm: 'space-around' },
+        alignItems: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        width: '96.5vw',
+        borderRadius: 0,
+        minHeight: '10px',
+      }}
+    >
+      {categories.map((category, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.15 }}
         >
-          Customer Support
-        </Typography>
-
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Name"
-          variant="outlined"
-          required
-        />
-
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Email"
-          type="email"
-          variant="outlined"
-          required
-        />
-
-        <TextField
-          fullWidth
-          multiline
-          rows={4}
-          margin="normal"
-          label="Message"
-          variant="outlined"
-          required
-        />
-
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            mt: 2,
-            backgroundColor: 'coral',
-            color: '#ffffff',
-            '&:hover': { backgroundColor: '#e6735b' },
-          }}
-        >
-          Submit
-        </Button>
-
-        <Button
-          variant="outlined"
-          fullWidth
-          sx={{
-            mt: 2,
-            color: 'coral',
-            borderColor: 'coral',
-            '&:hover': {
-              borderColor: '#e6735b',
-              color: '#e6735b',
-            },
-          }}
-          onClick={() => navigate('/contact')}
-        >
-          Contact Us
-        </Button>
-      </Container>
-    </>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              m: 2,
+              width: { xs: 90, sm: 100, md: 110 },
+              transition: 'transform 0.3s ease, opacity 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1)',
+                opacity: 1,
+              },
+            }}
+          >
+            <img
+              src={category.image}
+              alt={`${category.name} category`}
+              style={{
+                width: '100%',
+                height: '40px',
+                objectFit: 'cover',
+                borderRadius: '4px',
+              }}
+            />
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: 'bold',
+                fontSize: { xs: '10px', sm: '11px' },
+                mt: '4px',
+                lineHeight: 1,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {category.name}
+            </Typography>
+          </Box>
+        </motion.div>
+      ))}
+    </Box>
   );
-}
+};
+
+export default Categories;

@@ -11,6 +11,9 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import imageCompression from 'browser-image-compression';
+
 const categories = ['Electronics', 'Books', 'Clothing', 'Home', 'Sports', 'Stationary'];
 
 const AddItem = ({ onAddItem }) => {
@@ -21,8 +24,7 @@ const AddItem = ({ onAddItem }) => {
     contact: '',
     category: '',
     image: '',
-    duration: '',  // New field for duration
-    price: ''      // New field for price
+    price: ''
   });
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -33,14 +35,22 @@ const AddItem = ({ onAddItem }) => {
     setErrors({ ...errors, [e.target.name]: false });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setForm({ ...form, image: reader.result });
-      };
-      reader.readAsDataURL(file);
+      try {
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        };
+        const compressedFile = await imageCompression(file, options);
+        const base64 = await imageCompression.getDataUrlFromFile(compressedFile);
+        setForm({ ...form, image: base64 });
+      } catch (error) {
+        console.error('Image compression error:', error);
+        setSnackbar({ open: true, message: 'Image compression failed.', severity: 'error' });
+      }
     }
   };
 
@@ -51,40 +61,45 @@ const AddItem = ({ onAddItem }) => {
     if (!form.description) newErrors.description = 'Description is required';
     if (!form.contact) newErrors.contact = 'Contact is required';
     if (!form.category) newErrors.category = 'Category is required';
-    if (!form.duration) newErrors.duration = 'Duration is required'; // Validation for duration
-    if (!form.price) newErrors.price = 'Price is required';         // Validation for price
+    if (!form.price) newErrors.price = 'Price is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      onAddItem(form);
-      setSnackbar({ open: true, message: 'Item Added Successfully!', severity: 'success' });
-      setTimeout(() => navigate('/'), 1500);
+      const user = JSON.parse(localStorage.getItem('user'));
+      try {
+        const response = await axios.post('http://localhost:5000/api/products', {
+          ...form,
+          userId: user?.id,
+        });
+        if (onAddItem) onAddItem(response.data);
+        setSnackbar({ open: true, message: 'Item Added Successfully!', severity: 'success' });
+        setTimeout(() => navigate('/userpage'), 1500);
+      } catch (error) {
+        console.error('Error submitting item:', error);
+        setSnackbar({ open: true, message: 'Failed to add item.', severity: 'error' });
+      }
     } else {
       setSnackbar({ open: true, message: 'Please fill all fields correctly.', severity: 'error' });
     }
   };
 
   return (
-    <Container maxWidth="xs" sx={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh'
-    }}>
-      <Box sx={{
-        width: '100%',
-        maxWidth: '400px',
-        padding: '40px',
-        boxShadow: '0px 4px 20px rgba(0,0,0,0.1)',
-        borderRadius: '12px',
-        backgroundColor: '#ffffff'
-      }}>
+    <Container maxWidth="sm" sx={{ paddingTop: '4cm', paddingBottom: '32px' }}>
+      <Box
+        sx={{
+          width: '100%',
+          padding: 3,
+          boxShadow: 2,
+          borderRadius: 2,
+          backgroundColor: '#fff'
+        }}
+      >
         <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-          <AddCircleOutlineIcon sx={{ fontSize: 30, color: '#FF7F50', marginRight: 1 }} />
-          <Typography variant="h4" sx={{ color: '#FF7F50', fontWeight: 'bold' }}>
+          <AddCircleOutlineIcon sx={{ fontSize: 24, color: '#FF7F50', mr: 1 }} />
+          <Typography variant="h5" sx={{ color: '#FF7F50', fontWeight: 'bold' }}>
             Add Item
           </Typography>
         </Box>
@@ -94,12 +109,11 @@ const AddItem = ({ onAddItem }) => {
           component="label"
           fullWidth
           sx={{
+            fontSize: '0.85rem',
+            borderRadius: '20px',
+            mb: 1.5,
             borderColor: '#FF7F50',
             color: '#FF7F50',
-            fontWeight: 'bold',
-            borderRadius: '30px',
-            mb: 2,
-            textTransform: 'none',
             '&:hover': { borderColor: '#FF6347', color: '#FF6347' }
           }}
         >
@@ -113,11 +127,11 @@ const AddItem = ({ onAddItem }) => {
             alt="Preview"
             style={{
               width: '100%',
-              height: 'auto',
-              borderRadius: '12px',
-              marginBottom: '20px',
-              border: '2px solid #eee',
-              boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)'
+              maxHeight: '180px',
+              objectFit: 'cover',
+              borderRadius: '8px',
+              marginBottom: '16px',
+              border: '1px solid #eee',
             }}
           />
         )}
@@ -128,7 +142,8 @@ const AddItem = ({ onAddItem }) => {
           value={form.name}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          size="small"
+          margin="dense"
           variant="outlined"
           error={!!errors.name}
           helperText={errors.name}
@@ -139,7 +154,8 @@ const AddItem = ({ onAddItem }) => {
           value={form.student}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          size="small"
+          margin="dense"
           variant="outlined"
           error={!!errors.student}
           helperText={errors.student}
@@ -151,8 +167,9 @@ const AddItem = ({ onAddItem }) => {
           onChange={handleChange}
           fullWidth
           multiline
-          rows={3}
-          margin="normal"
+          rows={2}
+          size="small"
+          margin="dense"
           variant="outlined"
           error={!!errors.description}
           helperText={errors.description}
@@ -163,7 +180,8 @@ const AddItem = ({ onAddItem }) => {
           value={form.contact}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          size="small"
+          margin="dense"
           variant="outlined"
           error={!!errors.contact}
           helperText={errors.contact}
@@ -175,7 +193,8 @@ const AddItem = ({ onAddItem }) => {
           value={form.category}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          size="small"
+          margin="dense"
           variant="outlined"
           error={!!errors.category}
           helperText={errors.category}
@@ -187,30 +206,16 @@ const AddItem = ({ onAddItem }) => {
           ))}
         </TextField>
 
-        {/* New Duration Field */}
-        <TextField
-          name="duration"
-          label="Duration (in weeks)"
-          value={form.duration}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          type="number"
-          error={!!errors.duration}
-          helperText={errors.duration}
-        />
-
-        {/* New Price Field */}
         <TextField
           name="price"
-          label="Price per Week"
+          label="Price (₹)"
+          type="number"
           value={form.price}
           onChange={handleChange}
           fullWidth
-          margin="normal"
+          size="small"
+          margin="dense"
           variant="outlined"
-          type="text"
           error={!!errors.price}
           helperText={errors.price}
         />
@@ -220,15 +225,13 @@ const AddItem = ({ onAddItem }) => {
           onClick={handleSubmit}
           fullWidth
           sx={{
-            marginTop: '20px',
-            padding: '12px',
-            fontSize: '16px',
-            fontWeight: '600',
-            borderRadius: '30px',
+            mt: 2,
+            py: 1.2,
+            fontSize: '0.95rem',
+            fontWeight: 'bold',
+            borderRadius: '25px',
             backgroundColor: '#FF7F50',
-            '&:hover': {
-              backgroundColor: '#FF6347',
-            },
+            '&:hover': { backgroundColor: '#FF6347' },
           }}
         >
           Submit

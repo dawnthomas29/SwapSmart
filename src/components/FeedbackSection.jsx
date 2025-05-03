@@ -9,7 +9,7 @@ const FeedbackSection = ({ feedbacks }) => {
   const visibleFeedbacks = showAll ? feedbacks : feedbacks.slice(0, 5);
 
   return (
-    <Box sx={{ px: 3, py: 4, backgroundColor: '#f9f9f9' }}>
+    <Box sx={{ px: 3, py: 6, backgroundColor: '#f9f9f9',ml:23}} width="75vw">
       <Typography variant="h5" sx={{ mb: 2, color: 'coral' }}>
         What Our Users Say
       </Typography>

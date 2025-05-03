@@ -1,5 +1,3 @@
-// components/Feedback.js
-
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
 
@@ -7,13 +5,30 @@ const FeedbackForm = ({ onSubmitFeedback }) => {
   const [feedback, setFeedback] = useState('');
   const [name, setName] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newFeedback = { name, feedback }; // Removed email
-    onSubmitFeedback(newFeedback);
-    setFeedback('');
-    setName('');
-    alert('Thank you for your feedback!');
+    const newFeedback = { name, feedback };
+
+    try {
+      const res = await fetch('http://localhost:5000/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newFeedback),
+      });
+
+      if (res.ok) {
+        onSubmitFeedback(newFeedback); // Update frontend
+        alert('Thank you for your feedback!');
+        setFeedback('');
+        setName('');
+      } else {
+        alert('Failed to submit feedback');
+      }
+    } catch (err) {
+      console.error('Error submitting feedback:', err);
+    }
   };
 
   return (

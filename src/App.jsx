@@ -18,6 +18,7 @@ import useScrollRestoration from './components/useScrollRestoration';
 import UserProfile from './components/UserProfile';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
+import About from './components/About';
 
 function ScrollManager() {
   useScrollRestoration();
@@ -36,6 +37,7 @@ function HomeLayout({ feedbacks, items }) {
         </Box>
       </Container>
       <FeedbackSection feedbacks={feedbacks} />
+      <About/>
       <Footer />
     </>
   );

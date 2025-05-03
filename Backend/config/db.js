@@ -1,39 +1,35 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
+// config/db.js
+import mongoose from 'mongoose';
 
-// Store connections for multiple DBs
 const connections = {};
 
-// Function to connect to multiple databases
-const connectDBs = async () => {
+export const connectDBs = async () => {
   try {
     // Connect to SwapSmart DB
     const swapSmartConn = await mongoose.createConnection(
-      'mongodb+srv://donthomasbinoy814:user@cluster0.4eihooz.mongodb.net/SwapSmart?retryWrites=true&w=majority&appName=Cluster0',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
+      'mongodb+srv://anjela:090605anj@cluster0.y9xrmfb.mongodb.net/project'
     );
     connections.swapSmart = swapSmartConn;
-    console.log('Connected to SwapSmart DB');
+    console.log('✅ Connected to SwapSmart DB');
 
     // Connect to Complaint DB
     const complaintConn = await mongoose.createConnection(
-      'mongodb+srv://swapsmart5:swapsmart5@cluster0.kyg8oyq.mongodb.net/complaintDB?retryWrites=true&w=majority&appName=Cluster0',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
+      'mongodb+srv://anjela:090605anj@cluster0.y9xrmfb.mongodb.net/test'
     );
     connections.complaint = complaintConn;
-    console.log('Connected to Complaint DB');
+    console.log('✅ Connected to Complaint DB');
+
+    // Connect to Feedback DB
+    const feedbackConn = await mongoose.createConnection(
+      'mongodb+srv://anjela:090605anj@cluster0.y9xrmfb.mongodb.net/feedback'
+    );
+    connections.feedback = feedbackConn;
+    console.log('✅ Connected to Feedback DB');
+
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    process.exit(1); // Exit process with failure
+    console.error('❌ Error connecting to MongoDB:', error.message);
+    throw error;
   }
 };
 
-// Explicitly export the connectDBs function and connections
-module.exports = { connectDBs, connections };
+export { connections };

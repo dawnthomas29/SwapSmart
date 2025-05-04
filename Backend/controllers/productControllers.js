@@ -110,3 +110,22 @@ exports.updateProduct = async (req, res) => {
     res.status(500).json({ error: 'Failed to update product', details: error.message });
   }
 };
+exports.searchProductsByName = async (req, res) => {
+  try {
+    const Product = getProductModel();
+    const { name } = req.query;
+
+    if (!name) {
+      return res.status(400).json({ error: 'Search query missing' });
+    }
+
+    const products = await Product.find({
+      name: { $regex: new RegExp(name, 'i') } // case-insensitive
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error searching product by name:', error);
+    res.status(500).json({ error: 'Failed to search products' });
+  }
+};

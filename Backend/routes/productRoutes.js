@@ -17,4 +17,5 @@ router.delete('/:id', productController.deleteProduct);
 // Route to update a product by ID
 router.put('/:id', productController.updateProduct);  // New route for updating products
 
+router.get('/category/:category', productController.getProductsByCategory);
 module.exports = router;

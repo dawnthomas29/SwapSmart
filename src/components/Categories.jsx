@@ -1,16 +1,24 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const Categories = () => {
+  const navigate = useNavigate();
+
   const categories = [
     { name: 'Electronics', image: '/electronics.jpg' },
     { name: 'Books', image: '/books.jpg' },
     { name: 'Clothing', image: '/clothing.jpg' },
     { name: 'Home', image: '/home.jpg' },
     { name: 'Sports', image: '/sports.jpg' },
-    { name: 'Stationery', image: '/stationary.jpg' },
+    { name: 'Stationary', image: '/stationary.jpg' },
   ];
+
+  const handleCategoryClick = (category) => {
+    // Navigate to category page with category name as parameter
+    navigate(`/category/${category}`);
+  };
 
   return (
     <Box
@@ -36,6 +44,8 @@ const Categories = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.15 }}
+          onClick={() => handleCategoryClick(category.name)}
+          style={{ cursor: 'pointer' }}
         >
           <Box
             sx={{

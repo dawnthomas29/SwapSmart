@@ -18,4 +18,6 @@ router.delete('/:id', productController.deleteProduct);
 router.put('/:id', productController.updateProduct);  // New route for updating products
 
 router.get('/category/:category', productController.getProductsByCategory);
+
+router.get('/search',productController.searchProductsByName);
 module.exports = router;

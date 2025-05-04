@@ -20,7 +20,7 @@ import AddItem from './components/AddItem';
 import Home from './components/Home';
 import About from './components/About';
 import CategoryPage from './components/CategoryPage';
-import SearchResults from './SearchResults';
+import SearchResults from './components/SearchResults';
 
 
 function ScrollManager() {

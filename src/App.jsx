@@ -19,6 +19,7 @@ import UserProfile from './components/UserProfile';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
 import About from './components/About';
+import CategoryPage from './components/CategoryPage';
 
 function ScrollManager() {
   useScrollRestoration();
@@ -105,6 +106,7 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/userpage" element={<UserProfile />} />
         <Route path="/add" element={<AddItem onAddItem={handleAddItem} />} />
+        <Route path="/category/:categoryName" element={<CategoryPage />} />
       </Routes>
     </>
   );

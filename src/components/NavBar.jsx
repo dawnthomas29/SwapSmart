@@ -1,99 +1,44 @@
 import React, { useState } from 'react';
 import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  TextField,
-  InputAdornment
+  AppBar, Toolbar, Typography, InputBase, Button, Box, IconButton, Drawer, List, ListItem,
+  ListItemText, ListItemIcon,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginIcon from '@mui/icons-material/Login';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import ClearIcon from '@mui/icons-material/Clear';
-import MicIcon from '@mui/icons-material/Mic';
-import FeedbackIcon from '@mui/icons-material/Feedback';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { AddBoxRounded } from '@mui/icons-material';
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
 
   const isLoggedIn = Boolean(localStorage.getItem('token'));
-  const userEmail = localStorage.getItem('userEmail'); // Get the user's email from localStorage
+  const userEmail = localStorage.getItem('userEmail');
 
-  const toggleDrawer = (open) => {
-    setDrawerOpen(open);
-  };
+  const toggleDrawer = (open) => setDrawerOpen(open);
 
-  const handleClearSearch = () => setSearchTerm('');
-  const handleChange = (e) => setSearchTerm(e.target.value);
-
-  const handleVoiceSearch = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert('Speech Recognition API not supported in this browser.');
-      return;
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${searchTerm}`);
     }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-
-    recognition.onstart = () => setIsListening(true);
-    recognition.onend = () => setIsListening(false);
-    recognition.onerror = () => setIsListening(false);
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setSearchTerm(transcript);
-    };
-
-    recognition.start();
   };
 
-  const handleMenuItemClick = (route) => {
-    toggleDrawer(false);
-    navigate(route);
+  const handleProfileClick = () => {
+    navigate(userEmail === 'admin@mariancollege.org' ? '/admin' : '/userpage');
   };
 
   const handleAddItemClick = () => {
-    if (!isLoggedIn) {
-      navigate('/log');
-    } else {
-      navigate('/add');
-    }
+    navigate(isLoggedIn ? '/add' : '/log');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
     navigate('/');
-  };
-
-  const handleProfileClick = () => {
-    // Debugging step: Log the email to check its value
-    console.log("User Email:", userEmail);
-
-    // Check if the user is an admin by their email
-    if (userEmail === 'admin@mariancollege.org') {
-      navigate('/admin');  // Redirect to admin page if it's the admin email
-    } else {
-      navigate('/userpage');  // Redirect to user profile page for regular users
-    }
   };
 
   return (
@@ -106,160 +51,63 @@ const NavBar = () => {
           variant="h6"
           component={Link}
           to="/"
-          sx={{ color: 'inherit', textDecoration: 'none', whiteSpace: 'nowrap', flexGrow: 1 }}
+          sx={{ color: 'inherit', textDecoration: 'none', flexGrow: 1 }}
         >
           SwapSmart
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <TextField
-            variant="outlined"
-            placeholder="Search for products"
+        <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'white', borderRadius: 1, px: 1 }}>
+          <InputBase
+            placeholder="Search product..."
             value={searchTerm}
-            onChange={handleChange}
-            sx={{
-              backgroundColor: 'white',
-              maxWidth: '300px',
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '85px',
-                height: '38px',
-                paddingRight: 1,
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-              },
-              '& .MuiInputBase-input': {
-                padding: '8px 14px',
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <>
-                  {searchTerm && (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleClearSearch}>
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  )}
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleVoiceSearch} sx={{ color: isListening ? 'green' : 'inherit' }}>
-                      <MicIcon />
-                    </IconButton>
-                  </InputAdornment>
-                </>
-              ),
-            }}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            sx={{ ml: 1, flex: 1 }}
           />
+          <IconButton onClick={handleSearch}>
+            <SearchIcon />
+          </IconButton>
         </Box>
         <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 2 }}>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/"
-            startIcon={<HomeIcon />}
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-          >
-            Home
-          </Button>
+          <Button color="inherit" component={Link} to="/" startIcon={<HomeIcon />}>Home</Button>
           {isLoggedIn ? (
             <>
-              <Button
-                color="inherit"
-                onClick={handleProfileClick}  // Handle profile click based on user email
-                startIcon={<AccountCircleIcon />}
-                sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-              >
-                Profile
-              </Button>
-              <Button
-                color="inherit"
-                onClick={handleLogout}
-                startIcon={<LoginIcon />}
-                sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-              >
-                Logout
-              </Button>
+              <Button color="inherit" onClick={handleProfileClick} startIcon={<AccountCircleIcon />}>Profile</Button>
+              <Button color="inherit" onClick={handleLogout} startIcon={<LoginIcon />}>Logout</Button>
             </>
           ) : (
-            <Button
-              color="inherit"
-              component={Link}
-              to="/log"
-              startIcon={<LoginIcon />}
-              sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-            >
-              Login
-            </Button>
+            <Button color="inherit" component={Link} to="/log" startIcon={<LoginIcon />}>Login</Button>
           )}
-          <Button
-            color="inherit"
-            onClick={handleAddItemClick}
-            startIcon={<AddBoxRounded />}
-            sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-          >
-            Add Item
-          </Button>
+          <Button color="inherit" onClick={handleAddItemClick} startIcon={<AddBoxRounded />}>Add Item</Button>
         </Box>
       </Toolbar>
-
       <Drawer anchor="left" open={drawerOpen} onClose={() => toggleDrawer(false)}>
-        <br /><br /><br />
-        <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
-          <List>
-            <ListItem button component={Link} to="/" onClick={() => handleMenuItemClick('/')} >
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            {isLoggedIn ? (
-              <>
-                <ListItem button onClick={handleProfileClick}> {/* Handle Profile click */}
-                  <ListItemIcon>
-                    <AccountCircleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Profile" />
-                </ListItem>
-                <ListItem button onClick={handleLogout}>
-                  <ListItemIcon>
-                    <LoginIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Logout" />
-                </ListItem>
-              </>
-            ) : (
-              <ListItem button component={Link} to="/log" onClick={() => handleMenuItemClick('/log')} >
-                <ListItemIcon>
-                  <LoginIcon />
-                </ListItemIcon>
-                <ListItemText primary="Login" />
+        <List>
+          <ListItem button component={Link} to="/">
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+          {isLoggedIn ? (
+            <>
+              <ListItem button onClick={handleProfileClick}>
+                <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+                <ListItemText primary="Profile" />
               </ListItem>
-            )}
-            <ListItem button onClick={handleAddItemClick}>
-              <ListItemIcon>
-                <AddBoxRounded />
-              </ListItemIcon>
-              <ListItemText primary="Add Item" />
+              <ListItem button onClick={handleLogout}>
+                <ListItemIcon><LoginIcon /></ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </>
+          ) : (
+            <ListItem button component={Link} to="/log">
+              <ListItemIcon><LoginIcon /></ListItemIcon>
+              <ListItemText primary="Login" />
             </ListItem>
-            <ListItem button component={Link} to="/feedback" onClick={() => handleMenuItemClick('/feedback')}>
-              <ListItemIcon>
-                <FeedbackIcon />
-              </ListItemIcon>
-              <ListItemText primary="Feedback" />
-            </ListItem>
-            <ListItem button component={Link} to="/contact" onClick={() => handleMenuItemClick('/support')}>
-              <ListItemIcon>
-                <SupportAgentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Help & Support" />
-            </ListItem>
-          </List>
-        </Box>
+          )}
+          <ListItem button onClick={handleAddItemClick}>
+            <ListItemIcon><AddBoxRounded /></ListItemIcon>
+            <ListItemText primary="Add Item" />
+          </ListItem>
+        </List>
       </Drawer>
     </AppBar>
   );

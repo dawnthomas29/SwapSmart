@@ -18,11 +18,11 @@ import useScrollRestoration from './components/useScrollRestoration';
 import UserProfile from './components/UserProfile';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
+import ItemDetail from './components/ItemDetail';
+import Summary from './components/Summary';
 import About from './components/About';
 import CategoryPage from './components/CategoryPage';
 import SearchResults from './components/SearchResults';
-
-
 function ScrollManager() {
   useScrollRestoration();
   return null;
@@ -108,11 +108,12 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/userpage" element={<UserProfile />} />
         <Route path="/add" element={<AddItem onAddItem={handleAddItem} />} />
+        <Route path="/item/:id" element={<ItemDetail />} />
+        <Route path="/summary" element={<Summary />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/search" element={<SearchResults />} />
       </Routes>
     </>
   );
 }
-
 export default App;

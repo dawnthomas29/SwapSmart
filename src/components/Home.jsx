@@ -16,6 +16,10 @@ import './Home.css';
 const Home = ({ items }) => {
   const navigate = useNavigate();
 
+  const handleCardClick = (item) => {
+    navigate(`/item/${item._id}`, { state: { item } });
+  };
+
   if (!Array.isArray(items) || items.length === 0) {
     return (
       <Container sx={{ textAlign: 'center', mt: 5 }}>
@@ -25,17 +29,16 @@ const Home = ({ items }) => {
       </Container>
     );
   }
-<br/>
+
   return (
     <Box
-      className="bg-recently"
       sx={{
-        backgroundColor: '#f4f0ec ', // ✅ white background applied here
+        backgroundColor: '#f4f0ec',
         py: 5,
-        px:10,
+        px: 10,
         paddingY: 10,
-        mt:5,
-        
+        mt: 5,
+        width: '95.5vw'
       }}
     >
       <Typography
@@ -51,7 +54,7 @@ const Home = ({ items }) => {
         Recently Added
       </Typography>
 
-      <Grid container spacing={5}>
+      <Grid container spacing={6}>
         {items.map((item) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
             <Card
@@ -66,8 +69,10 @@ const Home = ({ items }) => {
                 justifyContent: 'space-between',
                 padding: '10px',
                 overflow: 'hidden',
-                ml:-4,
+                ml: 3,
+                cursor: 'pointer',
               }}
+              onClick={() => handleCardClick(item)}
             >
               <CardMedia
                 component="img"
@@ -100,7 +105,6 @@ const Home = ({ items }) => {
                 </Typography>
               </CardContent>
               <Box mt="auto" display="flex" justifyContent="space-between" sx={{ padding: '8px 0' }}>
-                
                 <Button
                   variant="contained"
                   size="small"
@@ -112,8 +116,12 @@ const Home = ({ items }) => {
                       backgroundColor: item.isBorrowed ? '#ccc' : '#115293',
                     },
                     fontSize: '0.8rem',
+                    zIndex: 10,
                   }}
-                  onClick={() => navigate(`/item/${item._id}`)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent triggering the card click again
+                    handleCardClick(item);
+                  }}
                 >
                   {item.isBorrowed ? 'Borrowed' : 'Borrow Now'}
                 </Button>

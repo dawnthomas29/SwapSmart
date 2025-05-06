@@ -18,17 +18,18 @@ import useScrollRestoration from './components/useScrollRestoration';
 import UserProfile from './components/UserProfile';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
+import ItemDetail from './components/ItemDetail';
+import Summary from './components/Summary';
 import About from './components/About';
 import CategoryPage from './components/CategoryPage';
 import SearchResults from './components/SearchResults';
-import HowItWorks from './components/HowItWorks'; // ✅ Make sure this file exists
-
+import HowItWorks from './components/HowItWorks';
 function ScrollManager() {
   useScrollRestoration();
   return null;
 }
 
-// ✅ Home page layout
+// Home page layout
 function HomeLayout({ feedbacks, items }) {
   return (
     <>
@@ -36,12 +37,12 @@ function HomeLayout({ feedbacks, items }) {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Categories items={items} />
           <Logos />
-          <Home items={items} />
-          <HowItWorks /> {/* ✅ How it works section added here */}
+          <Home items={items} /> {/* ✅ Ensures Home component renders */}
+          <HowItWorks />
         </Box>
       </Container>
       <FeedbackSection feedbacks={feedbacks} />
-      <About />
+      <About/>
       <Footer />
     </>
   );
@@ -51,6 +52,7 @@ function App() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [items, setItems] = useState([]);
 
+  // 🔄 Fetch feedbacks and products
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
@@ -84,6 +86,7 @@ function App() {
     fetchProducts();
   }, []);
 
+  // Handlers for form submissions
   const handleAddFeedback = (newFeedback) => {
     setFeedbacks((prev) => [newFeedback, ...prev]);
   };
@@ -107,12 +110,12 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/userpage" element={<UserProfile />} />
         <Route path="/add" element={<AddItem onAddItem={handleAddItem} />} />
+        <Route path="/item/:id" element={<ItemDetail />} />
+        <Route path="/summary" element={<Summary />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/search" element={<SearchResults />} />
-        
       </Routes>
     </>
   );
 }
-
 export default App;

@@ -126,7 +126,7 @@ const UserProfile = () => {
   };
 
   const handleUpdateProfile = (updatedData) => {
-    axios.put(`http://localhost:5000/api/users/profile/${user._id}`, updatedData, {
+    axios.put(`http://localhost:5000/api/users/profile/${user.id}`, updatedData, {
       headers: { Authorization: `Bearer ${token}` },
     }).then((response) => {
       setProfile(response.data.user);

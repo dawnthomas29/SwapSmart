@@ -25,7 +25,8 @@ const NavBar = () => {
 
   const toggleDrawer = (open) => setDrawerOpen(open);
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/search?q=${searchTerm}`);
     }

@@ -96,8 +96,10 @@ const Login = () => {
         // Store user info and email in localStorage
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('userid', JSON.stringify(response.data.user.id));
+        const U=localStorage.getItem('userid')
         localStorage.setItem('userEmail', response.data.user.email); // Store email in localStorage
-
+        console.log(U);
         setSnackbar({
           open: true,
           message: 'Login Successful!',
@@ -150,7 +152,8 @@ const Login = () => {
         height: '100vh',
         overflowY: 'auto',
         pt: 6,
-        pb: 4
+        pb: 4,
+        mt:15
       }}
     >
       <Box
@@ -164,8 +167,8 @@ const Login = () => {
         }}
       >
         <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-          <LoginIcon sx={{ fontSize: 30, color: '#FF7F50', marginRight: 1 }} />
-          <Typography variant="h4" sx={{ color: '#FF7F50' }}>
+          <LoginIcon sx={{ fontSize: 30, color: '#00b8a8', marginRight: 1 }} />
+          <Typography variant="h4" sx={{ color: '#00b8a8' }}>
             {isLogin ? 'Log In' : 'Register'}
           </Typography>
         </Box>
@@ -247,9 +250,9 @@ const Login = () => {
             fontSize: '16px',
             fontWeight: '600',
             borderRadius: '30px',
-            backgroundColor: '#FF7F50',
+            backgroundColor: '#00b8a8',
             '&:hover': {
-              backgroundColor: '#FF6347',
+              backgroundColor: '#00b8a8',
             },
           }}
         >
@@ -260,7 +263,7 @@ const Login = () => {
           {isLogin ? "Don’t have an account?" : "Already have an account?"}{' '}
           <span
             onClick={() => setIsLogin(!isLogin)}
-            style={{ color: '#FF7F50', cursor: 'pointer', fontWeight: 'bold' }}
+            style={{ color: '#00b8a8', cursor: 'pointer', fontWeight: 'bold' }}
           >
             {isLogin ? 'Sign up' : 'Log in'}
           </span>

@@ -113,17 +113,6 @@ const AdminPage = () => {
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', gridTemplateRows: '60px auto', gridTemplateAreas: `'header header' 'sidebar main'`, height: '100vh' }}>
-      
-      {/* Header */}
-      <header style={{ gridArea: 'header', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', zIndex: 1000 }}>
-        <div onClick={toggleSidebar}><BsJustify size={24} /></div>
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <BsSearch />
-          <BsFillBellFill />
-          <BsFillEnvelopeFill />
-          <BsPersonCircle />
-        </div>
-      </header>
 
       {/* Sidebar */}
       <aside style={{ gridArea: 'sidebar', backgroundColor: '#2c3e50', color: 'white', paddingTop: 20 }}>
@@ -132,8 +121,7 @@ const AdminPage = () => {
           <li style={{ padding: '10px 20px' }}><a href="#" onClick={() => setActiveSection('users')} style={{ color: 'white', textDecoration: 'none' }}><BsPeopleFill /> Users</a></li>
           <li style={{ padding: '10px 20px' }}><a href="#" onClick={() => setActiveSection('alerts')} style={{ color: 'white', textDecoration: 'none' }}><BsFillBellFill /> Complaints</a></li>
           <li style={{ padding: '10px 20px' }}><a href="#" onClick={() => setActiveSection('products')} style={{ color: 'white', textDecoration: 'none' }}><BsCart3 /> Products</a></li>
-          <li style={{ padding: '10px 20px' }}><a href="#" onClick={() => setActiveSection('stats')} style={{ color: 'white', textDecoration: 'none' }}><BsFillGrid3X3GapFill /> Stats</a></li>
-        </ul>
+          </ul>
       </aside>
 
       {/* Main Content */}
@@ -148,7 +136,6 @@ const AdminPage = () => {
                     <TableCell>Name</TableCell>
                     <TableCell>Email</TableCell>
                     <TableCell>Phone</TableCell>
-                    <TableCell>Password</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -158,7 +145,6 @@ const AdminPage = () => {
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.password}</TableCell>
                       <TableCell>
                         {user.isBlocked ? (
                           <Button variant="contained" color="primary" onClick={() => handleUnblockUser(user._id)}>Unblock</Button>
@@ -197,38 +183,6 @@ const AdminPage = () => {
             ) : (
               <p style={{ fontStyle: 'italic' }}>Loading admin data...</p>
             )}
-          </div>
-        )}
-
-        {activeSection === 'stats' && (
-          <div>
-            <h3>Statistics</h3>
-            {/* User Stats */}
-            <div style={{ width: '100%', height: '300px', marginTop: '20px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={userStats}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="users" stroke="#8884d8" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Product Stats */}
-            <div style={{ width: '100%', height: '300px', marginTop: '20px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={productStats} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius="80%" fill="#8884d8" label>
-                    {productStats.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#82ca9d' : '#8884d8'} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
           </div>
         )}
 
@@ -288,7 +242,7 @@ const AdminPage = () => {
                       <TableCell style={{ textAlign: 'center', padding: '12px', wordWrap: 'break-word', maxWidth: '300px' }}>
                         {product.description}
                       </TableCell>
-                      <TableCell style={{ textAlign: 'center', padding: '12px' }}>{product.rate}</TableCell>
+                      <TableCell style={{ textAlign: 'center', padding: '12px' }}>{product.price}</TableCell>
                       <TableCell style={{ textAlign: 'center', padding: '12px' }}>
                         <Button variant="contained" color="secondary" onClick={() => handleDeleteProduct(product._id)}>Delete</Button>
                       </TableCell>

@@ -120,7 +120,7 @@ exports.searchProductsByName = async (req, res) => {
     }
 
     const products = await Product.find({
-      name: { $regex: new RegExp(name, 'i') } // case-insensitive
+      name: { $regex: new RegExp('^'+name, 'i') } // case-insensitive
     });
 
     res.status(200).json(products);

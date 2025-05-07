@@ -35,24 +35,57 @@ const SearchResults = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4">Search Results for "{query}"</Typography>
-      {results.length > 0 ? (
-        results.map(item => (
-          <Box
-            key={item._id}
-            sx={{ border: '1px solid #ccc', padding: 2, marginTop: 2, borderRadius: 2, cursor: 'pointer' }}
-            onClick={() => handleResultClick(item)}
-          >
-            <img src={item.image} alt={item.name} width="150" height="150" />
-            <Typography variant="h6">{item.name}</Typography>
-            <Typography variant="body2">{item.description}</Typography>
-            <Typography variant="body1">₹ {item.price}</Typography>
-          </Box>
-        ))
-      ) : (
-        notFound && <Typography sx={{ color: 'red' }}>Results not Found</Typography>
-      )}
+  <Typography variant="h4">Search Results for "{query}"</Typography>
+
+  {results.length > 0 ? (
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 8,
+        marginTop: 4,
+      }}
+    >
+      {results.map(item => (
+        <Box
+          key={item._id}
+          sx={{
+            width: '250px',
+            border: '1px solid #ccc',
+            padding: 2,
+            borderRadius: 2,
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            boxShadow: 1,
+            transition: 'transform 0.2s',
+            '&:hover': {
+              transform: 'scale(1.03)',
+            },
+          }}
+          onClick={() => handleResultClick(item)}
+        >
+          <img
+            src={item.image}
+            alt={item.name}
+            style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+          />
+          <Typography variant="h6" sx={{ marginTop: 1 }}>
+            {item.name}
+          </Typography>
+          <Typography variant="body2">{item.description}</Typography>
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+            ₹ {item.price}
+          </Typography>
+        </Box>
+      ))}
     </Box>
+  ) : (
+    notFound && <Typography sx={{ color: 'red' }}>Results not Found</Typography>
+  )}
+</Box>
+
   );
 };
 

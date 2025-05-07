@@ -235,7 +235,7 @@ const UserProfile = () => {
           </Typography>
 
           <Typography variant="body2" color="textSecondary">
-            <b>Total Price:</b> ₹{totalPrice}
+            <b>Total Price:</b> ₹{item.totalPrice}
           </Typography>
 
           <Button variant="contained" color="error" sx={{ mt: 2 }}

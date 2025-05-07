@@ -1,7 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const productController  = require('../controllers/productController');
-const { getBorrowedProducts } = require('../controllers/productController');
+
+// Borrow Product Route ✅
+router.post('/borrow/:productId', productController.borrowProduct);
+
+// to cancel borrowed item (return item)
+router.post('/cancelBorrow/:productId', productController.cancelBorrow);
+
+// return borrowed items for profile display.
+router.get('/borrowed/:userId', productController.getBorrowedProducts);
+
 // Route to add a new product
 router.post('/', productController.addProduct);
 
@@ -15,12 +24,12 @@ router.get('/user/:userId', productController.getUserProducts);
 router.delete('/:id', productController.deleteProduct);
 
 // Route to update a product by ID
-router.put('/:id', productController.updateProduct);  // New route for updating products
+router.put('/:id', productController.updateProduct); // New route for updating products
 
+// Get products by category
 router.get('/category/:category', productController.getProductsByCategory);
 
-router.get('/search',productController.searchProductsByName);
-
-
+// Search products by name
+router.get('/search', productController.searchProductsByName);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -11,16 +11,23 @@ import {
   Box
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import './Home.css';
 
 const Home = ({ items }) => {
+  const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
+
+  // Ensure items are sorted by creation time (latest first)
+  const sortedItems = items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const handleCardClick = (item) => {
     navigate(`/item/${item._id}`, { state: { item } });
   };
 
-  if (!Array.isArray(items) || items.length === 0) {
+  const toggleView = () => {
+    setShowAll((prev) => !prev);
+  };
+
+  if (!Array.isArray(sortedItems) || sortedItems.length === 0) {
     return (
       <Container sx={{ textAlign: 'center', mt: 5 }}>
         <Typography variant="h6" color="textSecondary">
@@ -30,15 +37,16 @@ const Home = ({ items }) => {
     );
   }
 
+  const itemsToShow = showAll ? sortedItems : sortedItems.slice(0, 4);
+
   return (
     <Box
       sx={{
         backgroundColor: '#f4f0ec',
         py: 5,
         px: 10,
-        paddingY: 10,
         mt: 5,
-        width: '95.5vw'
+        width: '95.5vw',
       }}
     >
       <Typography
@@ -51,11 +59,11 @@ const Home = ({ items }) => {
           color: '#333',
         }}
       >
-        Recently Added
+        {showAll ? 'All Products' : 'Recently Added'}
       </Typography>
 
       <Grid container spacing={6}>
-        {items.map((item) => (
+        {itemsToShow.map((item) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
             <Card
               sx={{
@@ -119,7 +127,7 @@ const Home = ({ items }) => {
                     zIndex: 10,
                   }}
                   onClick={(e) => {
-                    e.stopPropagation(); // prevent triggering the card click again
+                    e.stopPropagation();
                     handleCardClick(item);
                   }}
                 >
@@ -130,6 +138,49 @@ const Home = ({ items }) => {
           </Grid>
         ))}
       </Grid>
+
+      {/* View More Button */}
+      {items.length > 4 && !showAll && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Button
+            variant="outlined"
+            onClick={toggleView}
+            sx={{
+              fontWeight: 'bold',
+              borderRadius: 2,
+              borderColor: '#1976d2',
+              color: '#1976d2',
+              '&:hover': {
+                backgroundColor: '#e3f2fd',
+              },
+            }}
+          >
+            View More
+          </Button>
+        </Box>
+      )}
+
+      {/* View Less Button */}
+      {showAll && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+          <Button
+            variant="outlined"
+            onClick={toggleView}
+            sx={{
+              fontWeight: 'bold',
+              borderRadius: 2,
+              borderColor: '#1976d2',
+              color: '#1976d2',
+              '&:hover': {
+                backgroundColor: '#e3f2fd',
+              },
+              mb: 2, // Margin bottom to separate the buttons
+            }}
+          >
+            View Less
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

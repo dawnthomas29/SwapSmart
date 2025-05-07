@@ -7,7 +7,7 @@ exports.addProduct = async (req, res) => {
   try {
     const Product = getProductModel(); // Call the function to get the model
 
-    const { name, student, description, contact, category, image,price,userId } = req.body;
+    const { name, student, description, contact, category, image,price,userId,ownerEmail } = req.body;
 
     if (!name || !student || !userId) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -22,6 +22,7 @@ exports.addProduct = async (req, res) => {
       image,
       price,
       userId,
+      ownerEmail,
     });
 
     const savedProduct = await newProduct.save();

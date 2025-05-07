@@ -24,7 +24,8 @@ const AddItem = ({ onAddItem }) => {
     contact: '',
     category: '',
     image: '',
-    price: ''
+    price: '',
+    email: '',  // Added email state
   });
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -56,12 +57,21 @@ const AddItem = ({ onAddItem }) => {
 
   const validateForm = () => {
     const newErrors = {};
+    const emailPattern = /^[a-z]+\.\d{2}[a-z]{3}\d{3}@mariancollege\.org$/i; // Regex for the given email format
+
     if (!form.name) newErrors.name = 'Item Name is required';
     if (!form.student) newErrors.student = 'Student Name is required';
     if (!form.description) newErrors.description = 'Description is required';
     if (!form.contact) newErrors.contact = 'Contact is required';
     if (!form.category) newErrors.category = 'Category is required';
     if (!form.price) newErrors.price = 'Price is required';
+    
+    if (!form.email) {
+      newErrors.email = 'Email is required';
+    } else if (!emailPattern.test(form.email) && form.email !== 'admin@mariancollege.org') {
+      newErrors.email = 'Invalid email format';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -98,8 +108,8 @@ const AddItem = ({ onAddItem }) => {
         }}
       >
         <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-          <AddCircleOutlineIcon sx={{ fontSize: 24, color: '#FF7F50', mr: 1 }} />
-          <Typography variant="h5" sx={{ color: '#FF7F50', fontWeight: 'bold' }}>
+          <AddCircleOutlineIcon sx={{ fontSize: 24, color: '#00b8a8', mr: 1 }} />
+          <Typography variant="h5" sx={{ color: '#00b8a8', fontWeight: 'bold' }}>
             Add Item
           </Typography>
         </Box>
@@ -112,8 +122,8 @@ const AddItem = ({ onAddItem }) => {
             fontSize: '0.85rem',
             borderRadius: '20px',
             mb: 1.5,
-            borderColor: '#FF7F50',
-            color: '#FF7F50',
+            borderColor: '#00b8a8',
+            color: '#00b8a8',
             '&:hover': { borderColor: '#FF6347', color: '#FF6347' }
           }}
         >
@@ -220,6 +230,19 @@ const AddItem = ({ onAddItem }) => {
           helperText={errors.price}
         />
 
+        <TextField
+          name="email"
+          label="Email"
+          value={form.email}
+          onChange={handleChange}
+          fullWidth
+          size="small"
+          margin="dense"
+          variant="outlined"
+          error={!!errors.email}
+          helperText={errors.email}
+        />
+
         <Button
           variant="contained"
           onClick={handleSubmit}
@@ -230,7 +253,7 @@ const AddItem = ({ onAddItem }) => {
             fontSize: '0.95rem',
             fontWeight: 'bold',
             borderRadius: '25px',
-            backgroundColor: '#FF7F50',
+            backgroundColor: '#00b8a8',
             '&:hover': { backgroundColor: '#FF6347' },
           }}
         >

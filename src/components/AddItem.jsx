@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -25,11 +25,19 @@ const AddItem = ({ onAddItem }) => {
     category: '',
     image: '',
     price: '',
-    email: '',  // Added email state
   });
+
+  const [ownerEmail, setOwnerEmail] = useState('');
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user?.email) {
+      setOwnerEmail(user.email);
+    }
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,7 +65,7 @@ const AddItem = ({ onAddItem }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    const emailPattern = /^[a-z]+\.\d{2}[a-z]{3}\d{3}@mariancollege\.org$/i; // Regex for the given email format
+    const emailPattern = /^[a-z]+\.\d{2}[a-z]{3}\d{3}@mariancollege\.org$/i;
 
     if (!form.name) newErrors.name = 'Item Name is required';
     if (!form.student) newErrors.student = 'Student Name is required';
@@ -65,11 +73,11 @@ const AddItem = ({ onAddItem }) => {
     if (!form.contact) newErrors.contact = 'Contact is required';
     if (!form.category) newErrors.category = 'Category is required';
     if (!form.price) newErrors.price = 'Price is required';
-    
-    if (!form.email) {
-      newErrors.email = 'Email is required';
-    } else if (!emailPattern.test(form.email) && form.email !== 'admin@mariancollege.org') {
-      newErrors.email = 'Invalid email format';
+
+    if (!ownerEmail) {
+      newErrors.ownerEmail = 'Email is required';
+    } else if (!emailPattern.test(ownerEmail) && ownerEmail !== 'admin@mariancollege.org') {
+      newErrors.ownerEmail = 'Invalid email format';
     }
 
     setErrors(newErrors);
@@ -83,6 +91,7 @@ const AddItem = ({ onAddItem }) => {
         const response = await axios.post('http://localhost:5000/api/products', {
           ...form,
           userId: user?.id,
+          ownerEmail: ownerEmail, // ✅ important fix
         });
         if (onAddItem) onAddItem(response.data);
         setSnackbar({ open: true, message: 'Item Added Successfully!', severity: 'success' });
@@ -231,16 +240,16 @@ const AddItem = ({ onAddItem }) => {
         />
 
         <TextField
-          name="email"
+          name="ownerEmail"
           label="Email"
-          value={form.email}
-          onChange={handleChange}
+          value={ownerEmail}
+          onChange={(e) => setOwnerEmail(e.target.value)}
           fullWidth
           size="small"
           margin="dense"
           variant="outlined"
-          error={!!errors.email}
-          helperText={errors.email}
+          error={!!errors.ownerEmail}
+          helperText={errors.ownerEmail}
         />
 
         <Button

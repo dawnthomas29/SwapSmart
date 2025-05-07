@@ -44,7 +44,8 @@ const Summary = () => {
         body: JSON.stringify({
           userId: user.id,
           fromDate,
-          toDate
+          toDate,
+          totalPrice
         })
       });
   

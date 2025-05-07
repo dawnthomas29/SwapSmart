@@ -14,7 +14,6 @@ import Register from './components/Register';
 import ComplaintForm from './components/ComplaintForm';
 import Contact from './components/Contact';
 import AdminPage from './components/AdminPage';
-import useScrollRestoration from './components/useScrollRestoration';
 import UserProfile from './components/UserProfile';
 import AddItem from './components/AddItem';
 import Home from './components/Home';
@@ -24,10 +23,8 @@ import About from './components/About';
 import CategoryPage from './components/CategoryPage';
 import SearchResults from './components/SearchResults';
 import HowItWorks from './components/HowItWorks';
-function ScrollManager() {
-  useScrollRestoration();
-  return null;
-}
+import ItemList from './components/ItemList';
+
 
 // Home page layout
 function HomeLayout({ feedbacks, items }) {
@@ -98,7 +95,6 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <ScrollManager />
       <NavBar />
       <Routes>
         <Route path="/" element={<HomeLayout feedbacks={feedbacks} items={items} />} />
@@ -114,6 +110,7 @@ function App() {
         <Route path="/summary" element={<Summary />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/search" element={<SearchResults />} />
+        <Route path="/items" element={<ItemList />} />
       </Routes>
     </>
   );

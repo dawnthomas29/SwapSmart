@@ -12,10 +12,11 @@ const productSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, required: true },
   createdAt: { type: Date, default: Date.now },
 
-  // Borrowing Fields ✅
   isBorrowed: { type: Boolean, default: false },
   borrowedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
-  dueDate: { type: Date, default: null }
+  dueDate: { type: Date, default: null },
+  ownerEmail: { type: String, required: true },
+  totalPrice: String,
 });
 
 // Export a function to get the Product model after DB connection is ready

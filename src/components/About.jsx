@@ -1,40 +1,47 @@
 import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Divider, Button } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 
 function About() {
+
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        padding: '40px 20px',
-        backgroundColor: '#f9f9f9',
-        borderRadius: '8px',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-        marginTop: '20px',
-        textAlign: 'center',
-      }}
-    >
-      <Box>
-        <Typography
-          variant="h4"
-          component="h2"
-          gutterBottom
-          sx={{ fontWeight: 'bold', color: '#333' }}
-        >
-          About SwapSmart
-        </Typography>
-        <Typography
-          variant="body1"
-          color="textSecondary"
-          sx={{ lineHeight: 1.8, fontSize: '1.1rem', color: '#555' }}
-        >
-          Welcome to SwapSmart, your one-stop platform for smart and seamless product exchanges. 
-          Our mission is to connect people and businesses, enabling them to trade items efficiently 
-          while fostering a sustainable and eco-friendly community. Whether you're looking to swap, 
-          sell, or discover new products, SwapSmart is here to make the process simple and enjoyable.
-        </Typography>
-      </Box>
-    </Container>
+    <Box sx={{ backgroundColor: '#f4f0ec', py: 8, px: 2, width: '100%',mt:10 }}>
+      <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+        <Box sx={{ mb: 4 }}>
+          <InfoIcon sx={{ fontSize: 50, color: '#1976d2' }} />
+          <Typography variant="h3" sx={{ fontWeight: 'bold', color: '#333', mt: 2 }}>
+            About SwapSmart
+          </Typography>
+          <Divider sx={{ my: 2, width: '80%', mx: 'auto', backgroundColor: '#1976d2' }} />
+          <Typography
+            variant="h6"
+            sx={{
+              lineHeight: 1.9,
+              fontSize: '1.15rem',
+              color: '#555',
+              px: { xs: 1, sm: 4 },
+            }}
+          >
+            Welcome to <strong>SwapSmart</strong>, your smart and seamless platform for product exchange.
+            We aim to foster a sustainable and eco-friendly community by enabling individuals and businesses
+            to trade, lend, and discover items effortlessly.
+          </Typography>
+        </Box>
+
+        <Box sx={{ mt: 6 }}>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontSize: '1.05rem',
+              color: '#444',
+              mb: 2,
+            }}
+          >
+            Whether you’re looking to lend, borrow, or explore new items, SwapSmart simplifies the process.
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 

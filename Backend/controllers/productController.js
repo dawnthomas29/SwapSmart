@@ -120,7 +120,7 @@ exports.searchProductsByName = async (req, res) => {
     }
 
     const products = await Product.find({
-      name: { $regex: new RegExp('^'+ name, 'i') } // case-insensitive
+      name: { $regex: new RegExp(name, 'i') } // case-insensitive
     });
 
     res.status(200).json(products);
@@ -129,3 +129,60 @@ exports.searchProductsByName = async (req, res) => {
     res.status(500).json({ error: 'Failed to search products' });
   }
 };
+
+exports.borrowProduct = async (req, res) => {
+  try {
+    const Product = getProductModel();
+    const { userId, fromDate, toDate } = req.body;
+    const { productId } = req.params;
+
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    if (product.isBorrowed) return res.status(400).json({ message: 'Item already borrowed' });
+
+    product.isBorrowed = true;
+    product.borrowedBy = userId;
+    product.dueDate = toDate;
+    await product.save();
+
+    res.status(200).json({ message: 'Item borrowed successfully', product });
+  } catch (error) {
+    console.error('Error borrowing product:', error);
+    res.status(500).json({ error: 'Failed to borrow product', details: error.message });
+  }
+};
+
+exports.getBorrowedProducts = async (req, res) => {
+  try {
+    const Product = getProductModel();
+    const products = await Product.find({ borrowedBy: req.params.userId });
+    res.status(200).json({ products });
+  } catch (error) {
+    console.error('Error fetching borrowed products:', error);
+    res.status(500).json({ error: 'Failed to fetch borrowed products' });
+  }
+};
+
+exports.cancelBorrow = async (req, res) => {
+  try {
+    const Product = getProductModel();
+    const { productId } = req.params;
+
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    // Set item back to available
+    product.isBorrowed = false;
+    product.borrowedBy = null;
+    product.dueDate = null;
+    await product.save();
+
+    res.status(200).json({ message: 'Borrow cancelled, item is now available', product });
+  } catch (error) {
+    console.error('Error cancelling borrow:', error);
+    res.status(500).json({ error: 'Failed to cancel borrow', details: error.message });
+  }
+};
+
+

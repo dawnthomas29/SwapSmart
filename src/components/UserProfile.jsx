@@ -27,8 +27,8 @@ const UserProfile = () => {
   const [updatedItem, setUpdatedItem] = useState(null);
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user'));
+  
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!user || !token) return;
 
@@ -60,10 +60,10 @@ const UserProfile = () => {
 
     const fetchBorrowedItems = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/borrowed/${user.id}`, {
+      const res = await axios.get(`http://localhost:5000/api/borrows/user/${user.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBorrowedItems(res.data.products);
+        setBorrowedItems(res.data);
       } catch (err) {
         console.error('Error fetching borrowed products:', err);
       }
@@ -167,6 +167,7 @@ const UserProfile = () => {
       setOpenSnackbar(true);
     }
   };
+  
 
   if (!profile) return <Typography>Loading...</Typography>;
 
@@ -200,20 +201,35 @@ const UserProfile = () => {
       {view === 'borrowed' && (
         <>
           <Typography variant="h5" gutterBottom>Borrowed Products</Typography>
-          <Grid container spacing={3}>
-            {borrowedItems.map((item) => (
-              <Grid item xs={12} sm={6} md={4} key={item._id}>
-                <Card sx={{ transition: 'transform 0.3s', '&:hover': { transform: 'scale(1.05)' } }}>
-                  <CardMedia component="img" height="140" image={item.image} alt={item.name} />
-                  <CardContent>
-                    <Typography variant="h6">{item.name}</Typography>
-                    <Typography variant="body2" color="textSecondary">Due: {new Date(item.dueDate).toLocaleDateString()}</Typography>
-                    <Button variant="contained" color="primary" sx={{ mt: 2 }} disabled>Borrowed</Button>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+<Grid container spacing={2}>
+  {borrowedItems.map((item) => (
+    <Grid item xs={12} sm={6} md={4} key={item._id}>
+      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', p: 1, borderRadius: 3, boxShadow: 3 }}>
+        <CardMedia
+          component="img"
+          height="140"
+          image={item.itemImage}
+          alt={item.itemName}
+          sx={{ borderRadius: 2 }}
+        />
+        <CardContent sx={{ flexGrow: 1, p: 1 }}>
+          <Typography variant="subtitle1" fontWeight="bold" gutterBottom>{item.itemName}</Typography>
+          <Typography variant="body2" color="text.secondary">Owner: {item.Owner}</Typography>
+          <Typography variant="body2" color="text.secondary">Contact: {item.itemContact}</Typography>
+          <Typography variant="body2" color="text.secondary">Borrower: {item.borrower}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {new Date(item.startDate).toLocaleDateString()} - {new Date(item.endDate).toLocaleDateString()}
+          </Typography>
+          <Typography variant="body2" fontWeight="medium" color="primary">₹ {item.totalPrice} for {item.totalDays} days</Typography>
+        </CardContent>
+        <Button variant="outlined" color="success" disabled sx={{ m: 1, borderRadius: 5 }}>
+          Borrowed
+        </Button>
+      </Card>
+    </Grid>
+  ))}
+</Grid>
+
         </>
       )}
 

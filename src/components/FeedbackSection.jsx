@@ -1,22 +1,48 @@
-// components/FeedbackSection.js
-
-import React, { useState } from 'react';
-import { Box, Typography, Card, CardContent, Button } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Card, CardContent } from '@mui/material';
 
 const FeedbackSection = ({ feedbacks }) => {
-  const [showAll, setShowAll] = useState(false);
-
-  const visibleFeedbacks = showAll ? feedbacks : feedbacks.slice(0, 5);
-
   return (
-    <Box sx={{ px: 3, py: 6, backgroundColor: '#f9f9f9',ml:23}} width="75vw">
-      <Typography variant="h5" sx={{ mb: 2, color: 'coral' }}>
-        What Our Users Say
+    <Box sx={{ px: 3, py: 6, backgroundColor: '#f4f0ec' }} width="100vw">
+      <Typography variant="h5" sx={{ mb: 3, color: '#00b8a8' }} textAlign="center">
+        <b>What Our Users Say</b>
       </Typography>
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-        {visibleFeedbacks.map((fb, index) => (
-          <Card key={index} sx={{ minWidth: 250, maxWidth: 300, flex: '1 1 auto', boxShadow: 3 }}>
+      {/* Horizontal Scrollable Feedback Row */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          overflowX: 'auto',
+          flexWrap: 'nowrap',
+          gap: 2,
+          pb: 2,
+          px: 1,
+          scrollBehavior: 'smooth',
+          '&::-webkit-scrollbar': {
+            height: 8,
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#ccc',
+            borderRadius: 4,
+          },
+        }}
+      >
+        {feedbacks.map((fb, index) => (
+          <Card
+            key={index}
+            sx={{
+              minWidth: 250,
+              maxWidth: 280,
+              flex: '0 0 auto',
+              boxShadow: 3,
+              scrollSnapAlign: 'start',
+              transition: 'transform 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.05)',
+              },
+            }}
+          >
             <CardContent>
               <Typography variant="subtitle1" fontWeight="bold">
                 {fb.name}
@@ -28,22 +54,6 @@ const FeedbackSection = ({ feedbacks }) => {
           </Card>
         ))}
       </Box>
-
-      {feedbacks.length > 5 && (
-        <Box sx={{ textAlign: 'center', mt: 3 }}>
-          <Button
-            onClick={() => setShowAll(!showAll)}
-            sx={{
-              backgroundColor: 'coral',
-              color: 'white',
-              px: 4,
-              '&:hover': { backgroundColor: '#e6735b' },
-            }}
-          >
-            {showAll ? 'Show Less' : 'View More'}
-          </Button>
-        </Box>
-      )}
     </Box>
   );
 };

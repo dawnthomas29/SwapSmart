@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Grid,
@@ -18,9 +18,13 @@ const Home = ({ items }) => {
 
   // Ensure items are sorted by creation time (latest first)
   const sortedItems = items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
+  const isLoggedIn = Boolean(localStorage.getItem('token'));
   const handleCardClick = (item) => {
+    if (!isLoggedIn) {
+      navigate('/log');
+    } else {
     navigate(`/item/${item._id}`, { state: { item } });
+    }
   };
 
   const toggleView = () => {
@@ -46,7 +50,7 @@ const Home = ({ items }) => {
         py: 5,
         px: 10,
         mt: 5,
-        width: '95.5vw',
+        width: '100vw',
       }}
     >
       <Typography
@@ -139,7 +143,6 @@ const Home = ({ items }) => {
         ))}
       </Grid>
 
-      {/* View More Button */}
       {items.length > 4 && !showAll && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
           <Button
@@ -160,7 +163,7 @@ const Home = ({ items }) => {
         </Box>
       )}
 
-      {/* View Less Button */}
+      
       {showAll && (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
           <Button
@@ -174,7 +177,7 @@ const Home = ({ items }) => {
               '&:hover': {
                 backgroundColor: '#e3f2fd',
               },
-              mb: 2, // Margin bottom to separate the buttons
+              mb: 2,
             }}
           >
             View Less

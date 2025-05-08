@@ -29,7 +29,7 @@ const Summary = () => {
 
   const start = dayjs(fromDate);
   const end = dayjs(toDate);
-  const days = end.diff(start, 'day') + 1; // Include both start and end dates
+  const days = end.diff(start, 'day') + 1;
   const pricePerDay = item.price / 7;
   const totalPrice = Math.ceil(pricePerDay * days);
 
@@ -54,7 +54,7 @@ const Summary = () => {
   
       alert('Borrow confirmed!\n\nAn email would be sent to:\n• Provider\n• Borrower');
       navigate('/');
-      window.location.reload(); // ✅ Force refresh item status
+      window.location.reload();
     } catch (err) {
       alert(err.message);
     }

@@ -91,7 +91,7 @@ const AddItem = ({ onAddItem }) => {
         const response = await axios.post('http://localhost:5000/api/products', {
           ...form,
           userId: user?.id,
-          ownerEmail: ownerEmail, // ✅ important fix
+          ownerEmail: ownerEmail, 
         });
         if (onAddItem) onAddItem(response.data);
         setSnackbar({ open: true, message: 'Item Added Successfully!', severity: 'success' });

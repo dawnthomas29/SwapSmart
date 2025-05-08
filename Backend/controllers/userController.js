@@ -1,8 +1,7 @@
-const getUserModel = require('../models/User'); // Get User model from specific DB connection
+const getUserModel = require('../models/User'); 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-// REGISTER USER
 exports.registerUser = async (req, res) => {
   const User = getUserModel();
   try {
@@ -40,7 +39,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// LOGIN USER
 exports.loginUser = async (req, res) => {
   const User = getUserModel();
   try {
@@ -80,7 +78,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// GET USER PROFILE
+
 exports.getUserProfile = async (req, res) => {
   const User = getUserModel();
   try {
@@ -98,7 +96,7 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
-// FETCH ALL USERS
+
 exports.fetchUsers = async (req, res) => {
   const User = getUserModel();
   try {
@@ -110,7 +108,7 @@ exports.fetchUsers = async (req, res) => {
   }
 };
 
-// UPDATE USER PROFILE
+
 exports.updateUserProfile = async (req, res) => {
   const User = getUserModel();
   try {
@@ -138,7 +136,7 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
-// BLOCK USER
+
 exports.blockUser = async (req, res) => {
   const User = getUserModel();
   try {
@@ -172,7 +170,6 @@ exports.blockUser = async (req, res) => {
   }
 };
 
-// UNBLOCK USER
 exports.unblockUser = async (req, res) => {
   const User = getUserModel();
   try {
@@ -206,7 +203,7 @@ exports.unblockUser = async (req, res) => {
   }
 };
 
-// GET ADMIN DATA
+
 exports.getAdminData = async (req, res) => {
   const User = getUserModel();
   try {

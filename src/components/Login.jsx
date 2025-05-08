@@ -75,7 +75,7 @@ const Login = () => {
             role: 'admin'
           };
           localStorage.setItem('user', JSON.stringify(adminUser));
-          localStorage.setItem('userEmail', adminUser.email); // Store email in localStorage
+          localStorage.setItem('userEmail', adminUser.email); 
 
           setSnackbar({
             open: true,
@@ -83,7 +83,7 @@ const Login = () => {
             severity: 'success'
           });
           setTimeout(() => {
-            navigate('/admin'); // Redirect to admin page
+            navigate('/admin');
           }, 1500);
           return;
         }
@@ -98,7 +98,7 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('userid', JSON.stringify(response.data.user.id));
         const U=localStorage.getItem('userid')
-        localStorage.setItem('userEmail', response.data.user.email); // Store email in localStorage
+        localStorage.setItem('userEmail', response.data.user.email); 
         console.log(U);
         setSnackbar({
           open: true,

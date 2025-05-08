@@ -8,7 +8,6 @@ const ComplaintSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Export a function to get the model **after** DBs are connected
 module.exports = () => {
   if (!connections.complaint) {
     throw new Error('Complaint DB connection not initialized yet.');

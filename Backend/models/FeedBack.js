@@ -7,7 +7,6 @@ const feedbackSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-// Avoid recompiling model on hot reload or repeated use
 export const getFeedbackModel = () => {
   if (!connections.feedback) {
     throw new Error('Feedback DB connection not initialized');

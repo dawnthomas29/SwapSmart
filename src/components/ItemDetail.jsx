@@ -79,7 +79,7 @@ const ItemDetail = () => {
     <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', mt: 10, py: 5, pb: 12 }}>
       <Container maxWidth="lg">
         <Grid container spacing={6} justifyContent="space-between" alignItems="flex-start">
-          {/* Left Side */}
+         
           <Grid item xs={12} md={6}>
             <Box sx={{ backgroundColor: '#f5f5f5' }}>
               <Paper
@@ -114,7 +114,6 @@ const ItemDetail = () => {
                   />
                 </Box>
 
-                {/* Share & Favorite */}
                 <Box
                   sx={{
                     position: 'absolute',
@@ -148,7 +147,6 @@ const ItemDetail = () => {
                 </Box>
               </Paper>
 
-              {/* Name + Description */}
               <Paper
                 elevation={1}
                 sx={{
@@ -174,7 +172,7 @@ const ItemDetail = () => {
             </Box>
           </Grid>
 
-          {/* Right Side */}
+   
           <Grid item xs={12} md={6}>
             <Paper elevation={3} sx={{ p: 1, borderRadius: 1, mt: 2, pt: 5, pl: 5 }}>
               <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
@@ -186,10 +184,9 @@ const ItemDetail = () => {
 
               <Divider sx={{ my: 2 }} />
 
-              {/* Calculation Section */}
               <Box
                 sx={{
-                  p: 0.5, // Reduced padding
+                  p: 0.5, 
                   backgroundColor: '#fff',
                   borderRadius: 2,
                   boxShadow: 1,
@@ -200,7 +197,7 @@ const ItemDetail = () => {
                 <Typography variant="subtitle1" sx={{ mb: 1 }}>
                   Choose date
                 </Typography>
-                <Grid container spacing={1}> {/* Reduced spacing */}
+                <Grid container spacing={1}> 
                   <Grid item xs={6}>
                     <TextField
                       type="date"
@@ -209,7 +206,7 @@ const ItemDetail = () => {
                       InputLabelProps={{ shrink: true }}
                       value={fromDate}
                       onChange={(e) => setFromDate(e.target.value)}
-                      sx={{ width: '100%' }} // Ensure the width is within the container
+                      sx={{ width: '100%' }} 
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -220,7 +217,7 @@ const ItemDetail = () => {
                       InputLabelProps={{ shrink: true }}
                       value={toDate}
                       onChange={(e) => setToDate(e.target.value)}
-                      sx={{ width: '100%' }} // Ensure the width is within the container
+                      sx={{ width: '100%' }} 
                     />
                   </Grid>
                 </Grid>
@@ -243,7 +240,7 @@ const ItemDetail = () => {
     color="primary"
     onClick={handleBorrow}
     disabled={item.isBorrowed || amount === 0 || !termsChecked}
-    sx={{ py: 1, mt: 2, fontSize: '1rem', width: '50%' }} // Set width to 50% for half-size
+    sx={{ py: 1, mt: 2, fontSize: '1rem', width: '50%' }} 
   >
     ₹{amount}
   </Button>
@@ -255,7 +252,7 @@ const ItemDetail = () => {
             {/* Seller Information */}
             <Paper elevation={3} sx={{ p: 3, mt: 5, borderRadius: 1, ml: 0.2 }}>
               <Box display="flex" alignItems="center" gap={2}>
-                {/* Avatar Circle */}
+             
                 <Box
                   sx={{
                     width: 80,
@@ -274,7 +271,7 @@ const ItemDetail = () => {
                   {item.student?.charAt(0).toUpperCase() || 'U'}
                 </Box>
 
-                {/* Info Section */}
+              
                 <Box>
                   <Typography variant="subtitle1" fontWeight="bold">
                     <b>{item.student}</b>

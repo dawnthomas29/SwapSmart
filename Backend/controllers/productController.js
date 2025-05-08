@@ -5,7 +5,7 @@ const getProductModel = require('../models/Product');
 
 exports.addProduct = async (req, res) => {
   try {
-    const Product = getProductModel(); // Call the function to get the model
+    const Product = getProductModel(); 
 
     const { name, student, description, contact, category, image,price,userId,ownerEmail } = req.body;
 

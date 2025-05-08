@@ -21,7 +21,7 @@ const CategoryPage = () => {
     }
   };
 
-  // Function to handle card click and navigate to the item detail page
+  
   const handleCardClick = (item) => {
     navigate(`/item/${item._id}`, { state: { item } });
   };

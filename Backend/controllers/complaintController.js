@@ -1,17 +1,17 @@
 const getComplaintModel = require('../models/Complaint');
 const nodemailer = require('nodemailer')
-// Save a new complaint
+
 
 exports.createComplaint = async (req, res) => {
   try {
     const Complaint = getComplaintModel();
     const { name, email, message } = req.body;
 
-    // Save to DB
+ 
     const newComplaint = new Complaint({ name, email, message });
     await newComplaint.save();
 
-    // Send email to admin
+  
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -42,7 +42,6 @@ Message: ${message}
   }
 };
 
-// Get all complaints (for Admin Page)
 exports.getComplaints = async (req, res) => {
   try {
     const Complaint = getComplaintModel();
@@ -54,7 +53,6 @@ exports.getComplaints = async (req, res) => {
   }
 };
 
-// DELETE complaint by ID
 exports.deleteComplaint = async (req, res) => {
   try {
     const Complaint = getComplaintModel();

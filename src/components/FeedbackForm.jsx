@@ -19,7 +19,7 @@ const FeedbackForm = ({ onSubmitFeedback }) => {
       });
 
       if (res.ok) {
-        onSubmitFeedback(newFeedback); // Update frontend
+        onSubmitFeedback(newFeedback);
         alert('Thank you for your feedback!');
         setFeedback('');
         setName('');

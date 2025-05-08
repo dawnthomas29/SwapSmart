@@ -76,14 +76,12 @@ const NavBar = () => {
     navigate('/');
   };
   const handleProfileClick = () => {
-    // Debugging step: Log the email to check its value
     console.log("User Email:", userEmail);
 
-    // Check if the user is an admin by their email
     if (userEmail === 'admin@mariancollege.org') {
-      navigate('/admin');  // Redirect to admin page if it's the admin email
+      navigate('/admin'); 
     } else {
-      navigate('/userpage');  // Redirect to user profile page for regular users
+      navigate('/userpage');  
     }
   };
 

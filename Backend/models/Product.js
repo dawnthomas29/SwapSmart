@@ -19,7 +19,6 @@ const productSchema = new mongoose.Schema({
   totalPrice: String,
 });
 
-// Export a function to get the Product model after DB connection is ready
 module.exports = () => {
   if (!connections.products) {
     throw new Error('Products DB connection is not established');

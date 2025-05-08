@@ -20,7 +20,7 @@ export default function Contact() {
   const location = useLocation();
 
   useEffect(() => {
-    // Check if redirected from success
+   
     if (location.state?.fromSuccess) {
       setSnackbar({
         open: true,
@@ -64,7 +64,6 @@ export default function Contact() {
       });
 
       if (response.ok) {
-        // Redirect to /contact and show success via state
         navigate('/contact', { state: { fromSuccess: true } });
       } else {
         setSnackbar({
@@ -169,7 +168,7 @@ export default function Contact() {
         </Box>
       )}
 
-      {/* Snackbar for feedback */}
+    
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}

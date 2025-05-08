@@ -124,7 +124,7 @@ const AdminPage = () => {
           </ul>
       </aside>
 
-      {/* Main Content */}
+     
       <main style={{ gridArea: 'main', padding: '20px', overflowY: 'auto' }}>
         {activeSection === 'users' && (
           <>
@@ -186,7 +186,7 @@ const AdminPage = () => {
           </div>
         )}
 
-        {/* Complaints */}
+
         {activeSection === 'alerts' && (
           <>
             <h3>User Complaints</h3>
@@ -217,7 +217,7 @@ const AdminPage = () => {
           </>
         )}
 
-        {/* Products */}
+       
         {activeSection === 'products' && (
           <>
             <h3>Products</h3>
@@ -254,7 +254,7 @@ const AdminPage = () => {
           </>
         )}
 
-        {/* Snackbar */}
+       
         <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
           <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
             {snackbar.message}

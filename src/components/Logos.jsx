@@ -3,9 +3,8 @@ import { Grid, Typography, Card, CardContent, CardMedia, Box } from '@mui/materi
 
 const Logos = () => {
   return (
-    <Box sx={{ py: 8, px: 16, backgroundColor: '#f4f0ec ' }}> {/* Transparent background added */}
+    <Box sx={{ py: 8, px: 16, backgroundColor: '#f4f0ec ' }}> 
       
-      {/* Heading + Enlarged Image Row */}
       <Grid container alignItems="center" spacing={3} sx={{ mb: 2 }}>
         <Grid item xs={12} md={6}>
           <Typography
@@ -35,14 +34,13 @@ const Logos = () => {
     mx: 'auto', // You can remove this if you're aligning to the right
     mt:-20,
     ml:50,
-     // Aligns the image to the right
+     
   }}
 />
 
         </Grid>
       </Grid>
 
-      {/* Logos Grid Section */}
       <Grid container spacing={6} justifyContent="center">
         {[
           { title: 'Borrow Anything', image: 'https://borrowme.com/images/borrow.svg' },

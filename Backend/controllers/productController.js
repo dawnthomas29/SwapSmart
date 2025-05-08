@@ -33,7 +33,6 @@ exports.addProduct = async (req, res) => {
     res.status(500).json({ error: 'Failed to add product', details: error.message });
   }
 };
-// Get products uploaded by a user
 exports.getUserProducts = async (req, res) => {
   try {
 const Product = getProductModel(); // CALL the function to get the model
@@ -46,6 +45,7 @@ const products = await Product.find({ userId: req.params.userId });
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
+
 exports.getAllProducts = async (req, res) => {
   try {
     const Product = getProductModel();
@@ -56,7 +56,7 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 };
-// Get products by category
+
 exports.getProductsByCategory = async (req, res) => {
   try {
     const Product = getProductModel(); // Get model
@@ -87,7 +87,7 @@ exports.deleteProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try {
-    const Product = getProductModel(); // ✅ Get the model
+    const Product = getProductModel(); 
     const { id } = req.params;
     const { name, student, description, contact, category, image, price, userId } = req.body;
 
@@ -144,7 +144,6 @@ exports.borrowProduct = async (req, res) => {
 
     if (product.isBorrowed) return res.status(400).json({ message: 'Item already borrowed' });
 
-    // Update product status to borrowed
     product.isBorrowed = true;
     product.borrowedBy = userId;
     product.dueDate = toDate;
@@ -152,18 +151,17 @@ exports.borrowProduct = async (req, res) => {
 
     await product.save();
 
-    // Send an email to the owner
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'benoythomas31@gmail.com', // Replace with your email
-        pass: 'qdzqkgynbcbubdfi', // Replace with your email password
+        user: 'benoythomas31@gmail.com',
+        pass: 'qdzqkgynbcbubdfi', 
       },
     });
 
     const mailOptions = {
       from: 'benoythomas31@gmail.com',
-      to: product.ownerEmail,  // Owner's email from the product DB
+      to: product.ownerEmail, 
       subject: 'Item Borrowed Notification',
       text: `Hello, your item "${product.name}" has been borrowed by User ${userId}.\n\nBorrow Details:\nFrom: ${fromDate}\nTo: ${toDate}\n\nPlease contact the borrower for further details.`,
     };
@@ -197,25 +195,23 @@ exports.cancelBorrow = async (req, res) => {
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
-    // Set item back to available
     product.isBorrowed = false;
     product.borrowedBy = null;
     product.dueDate = null;
     product.totalPrice=null;
     await product.save();
 
-    // Send an email to the owner about the cancellation
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'benoythomas31@gmail.com', // Replace with your email
-        pass: 'qdzqkgynbcbubdfi', // Replace with your email password
+        user: 'benoythomas31@gmail.com', 
+        pass: 'qdzqkgynbcbubdfi', 
       },
     });
 
     const mailOptions = {
       from: 'benoythomas31@gmail.com',
-      to: product.ownerEmail,  // Owner's email from the product DB
+      to: product.ownerEmail,  
       subject: 'Borrow Cancelled Notification',
       text: `Hello, the borrow for your item "${product.name}" has been cancelled.\n\nThe item is now available for others to borrow.`,
     };
